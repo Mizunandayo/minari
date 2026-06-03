@@ -1,27 +1,21 @@
 @import "tailwindcss";
 
-/* ---- Minari "Warm Light" design system — GitLab orange + Claude clay ---- */
+/* ---- Mi-series monochrome design tokens (readability-corrected) ---- */
 @theme {
-  /* Surfaces */
-  --color-cream: #fbf8f3;          /* warm near-white page background */
-  --color-card: #ffffff;           /* raised card surface */
-  --color-line: rgba(67, 41, 24, 0.12);   /* warm brown-tinted hairline border */
+  --color-surface: #050505;          /* near-black background */
+  --color-surface-raised: #0d0d0f;   /* glass card base */
+  --color-line: rgba(255, 255, 255, 0.14);
 
-  /* Ink — warm browns, never gray; all >= AA contrast on cream */
-  --color-ink: #2a1a0f;            /* headings (espresso) */
-  --color-ink-soft: #3d2a1b;       /* body copy (cocoa) */
-  --color-ink-muted: #5e3f28;      /* metadata/labels (mid brown, ~7:1) */
+  /* Text: never below 78% opacity — no muted gray text anywhere */
+  --color-text: rgba(255, 255, 255, 1);      /* headings */
+  --color-text-body: rgba(255, 255, 255, 0.92);
+  --color-text-meta: rgba(255, 255, 255, 0.78);
 
-  /* Brand */
-  --color-primary: #f05a1e;        /* GitLab-style orange — CTAs, accents */
-  --color-primary-strong: #d94e15; /* hover/active */
-  --color-clay: #b0573a;           /* Claude terracotta — secondary accent */
-
-  /* Functional severity */
-  --color-pass: #1f8a4f;
-  --color-warn: #c2810a;
-  --color-crit: #c62828;
-  --color-info: #1e6f8b;
+  /* Functional severity states (only permitted color) */
+  --color-pass: #34d399;
+  --color-warn: #fbbf24;
+  --color-crit: #f87171;
+  --color-info: #60a5fa;
 
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
 
@@ -30,46 +24,41 @@
 }
 
 html {
-  background: var(--color-cream);
-  color-scheme: light;
+  background: var(--color-surface);
+  color-scheme: dark;
 }
 
 body {
-  background: var(--color-cream);
-  color: var(--color-ink-soft);
+  background: var(--color-surface);
+  color: var(--color-text-body);
   font-family: var(--font-sans);
-  font-size: 1rem;                 /* 16px minimum body */
+  font-size: 1rem;                   /* 16px minimum body */
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* Warm ambient glow so the cream isn't flat — orange + clay, not "AI blue" */
+/* Subtle ambient gradient so the near-black isn't flat — not an "AI blue gradient" */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(1100px 600px at 85% -10%, rgba(240, 90, 30, 0.08), transparent 60%),
-    radial-gradient(900px 520px at -10% 110%, rgba(176, 87, 58, 0.07), transparent 55%);
+    radial-gradient(1200px 600px at 80% -10%, rgba(255, 255, 255, 0.05), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(255, 255, 255, 0.035), transparent 55%);
 }
 
 /* Every interactive element: pointer cursor + visible focus ring (a11y + CTA feel) */
-button,
-a,
-[role="button"] {
+button, a, [role="button"] {
   cursor: pointer;
 }
 :focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-info);
   outline-offset: 2px;
   border-radius: 6px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
-    animation: none !important;
-    transition: none !important;
-  }
+  * { animation: none !important; transition: none !important; }
 }
