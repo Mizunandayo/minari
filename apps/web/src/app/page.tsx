@@ -6,14 +6,14 @@ export default function Home() {
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">
       <header className="mb-12">
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-1.5 text-[0.875rem] font-medium text-white/[0.78]">
-          <Activity size={16} strokeWidth={2.2} aria-hidden />
+        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-line bg-primary/5 px-4 py-1.5 text-[0.875rem] font-semibold text-ink-muted">
+          <Activity size={16} strokeWidth={2.4} className="text-primary" aria-hidden />
           GitLab Track · Rapid Agent Hackathon 2026
         </div>
-        <h1 className="text-5xl font-bold leading-tight tracking-tight text-white">
-          Minari<span className="ml-3 align-middle text-2xl font-medium text-white/[0.78]">実成</span>
+        <h1 className="text-5xl font-bold leading-tight tracking-tight text-ink">
+          Minari<span className="ml-3 align-middle text-2xl font-semibold text-clay">実成</span>
         </h1>
-        <p className="mt-4 max-w-2xl text-lg font-normal text-white/[0.92]">
+        <p className="mt-4 max-w-2xl text-lg font-normal text-ink-soft">
           Autonomous flaky-test intelligence. Detect, diagnose, fix, verify, and deliver —
           end to end through GitLab MCP, in under two minutes.
         </p>

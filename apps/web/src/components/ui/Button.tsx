@@ -14,12 +14,12 @@ type Props = {
 export function Button({ children, onClick, variant = "primary", type = "button", ...rest }: Props) {
   const base =
     "inline-flex items-center gap-2 rounded-xl px-5 py-3 text-base font-semibold " +
-    "cursor-pointer select-none transition-[transform,background,border-color] duration-200 " +
+    "cursor-pointer select-none transition-[transform,background,border-color,color] duration-200 " +
     "ease-out focus-visible:outline-none";
   const styles =
     variant === "primary"
-      ? "bg-white text-black hover:bg-white/90"
-      : "border border-white/20 text-white hover:border-white/45 hover:bg-white/5";
+      ? "bg-primary text-white shadow-[0_6px_18px_-6px_rgba(240,90,30,0.5)] hover:bg-primary-strong"
+      : "border border-line text-ink hover:border-primary hover:text-primary hover:bg-primary/5";
 
   return (
     <motion.button
