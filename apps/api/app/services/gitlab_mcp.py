@@ -41,12 +41,14 @@ def _gitlab_api_url() -> str:
 def _build_client() -> MultiServerMCPClient:
     settings = get_settings()
 
-    # On Windows, npx must be invoked through cmd.exe; spawning "npx" directly
-    # fails with WinError 2. On POSIX (incl. the Cloud Run container) call npx.
+    # Windows (local dev): launch the server via npx through cmd.exe.
+    # POSIX/container: call the globally-installed binary directly (the Dockerfile
+    # symlinks it to /usr/local/bin/minari-mcp). npx is avoided in the container
+    # because it ignores global installs and re-downloads from the registry.
     if sys.platform == "win32":
         command, args = "cmd", ["/c", "npx", "-y", "@zereight/mcp-gitlab"]
     else:
-        command, args = "npx", ["-y", "@zereight/mcp-gitlab"]
+        command, args = "minari-mcp", []
 
     return MultiServerMCPClient(
         {

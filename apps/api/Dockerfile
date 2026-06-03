@@ -22,14 +22,20 @@ RUN apt-get update \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && npm install -g @zereight/mcp-gitlab \
+    # Symlink the installed bin to a stable name so the app spawns it directly
+    # (no npx -> no registry download, no per-user npm cache write).
+    && ln -sf "$(command -v mcp-gitlab || command -v better-gitlab-mcp-server || command -v gitlab-mcp)" /usr/local/bin/minari-mcp \
     && apt-get purge -y curl gnupg \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
-RUN groupadd --system minari && useradd --system --gid minari --no-create-home minari
+# Non-root user WITH a writable home (Node/npm need one even when invoked directly)
+RUN groupadd --system minari \
+    && useradd --system --gid minari --create-home --home-dir /home/minari minari
 WORKDIR /app
 COPY --from=builder /app /app
 ENV PATH="/app/.venv/bin:$PATH" \
+    HOME=/home/minari \
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     NODE_ENV=production
