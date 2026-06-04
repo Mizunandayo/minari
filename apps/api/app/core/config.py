@@ -27,9 +27,7 @@ class Settings(BaseSettings):
     env: Literal["development", "production", "test"] = "development"
     demo_api_key: SecretStr
 
-    # CORS — NoDecode skips pydantic-settings' JSON decoding so a plain
-    # comma-separated env value (e.g. "http://localhost:3000,https://app.vercel.app")
-    # is passed raw to the _split_origins validator below.
+    # CORS
     cors_origins: Annotated[list[str], NoDecode] = Field(
         default_factory=lambda: ["http://localhost:3000"]
     )
@@ -45,8 +43,19 @@ class Settings(BaseSettings):
     demo_test_file: str = "tests/test_checkout_flow.py"
 
     # LLM 
+    gemini_use_vertex: bool = False
+    gcp_project: str | None = None
+    gcp_location: str = "asia-northeast1"
     gemini_api_key: SecretStr | None = None
+    gemini_flash_model: str = "gemini-2.5-flash"
+    gemini_pro_model: str = "gemini-2.5-pro"
+    gemini_embed_model: str = "gemini-embedding-001"
+    deepseek_model: str = "deepseek-reasoner"
+    deepseek_base_url: str = "https://api.deepseek.com/v1"
     deepseek_api_key: SecretStr | None = None
+
+    #Streaming auth
+    stream_token_ttl_seconds: int = 120
 
     # OBSERVABILITY
     langfuse_public_key: SecretStr | None = None
@@ -66,6 +75,20 @@ class Settings(BaseSettings):
         if isinstance(origins, list) and "*" in origins:
             raise ValueError("Wildcard CORS origin is forbidden — list exact origins.")
         return origins
+
+    @field_validator(
+        "gemini_api_key", "deepseek_api_key",
+        "langfuse_public_key", "langfuse_secret_key",
+        mode="before",
+    )
+    @classmethod
+    def _blank_to_none(cls, value: object) -> object:
+        # A blank env line ("MINARI_DEEPSEEK_API_KEY=") must read as absent, not
+        # SecretStr("") — otherwise router.py treats DeepSeek as configured and
+        # routes PFS>75 cases to it → 402 Insufficient Balance.
+        if isinstance(value, str) and not value.strip():
+            return None
+        return value
 
     @property
     def is_production(self) -> bool:

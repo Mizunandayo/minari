@@ -11,6 +11,14 @@ log = get_logger(__name__)
 _pool: asyncpg.Pool | None = None
 
 
+def get_pool() -> asyncpg.Pool | None:
+    """Live accessor — always reflects the current pool (not a stale import).
+
+    Callers must use this, NOT ``from app.db.session import _pool``: that binds the
+    name to ``None`` at import time and never sees ``init_pool()``'s reassignment.
+    """
+    return _pool
+
 
 async def init_pool() -> None:
     """Create the connection pool.

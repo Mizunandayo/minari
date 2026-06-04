@@ -1,18 +1,11 @@
-"""GitLab MCP Server client.
-
-Uses the community ``@zereight/mcp-gitlab`` server (Node, launched over stdio),
-which wraps the GitLab REST API and authenticates with a Personal Access Token.
-The official hosted GitLab MCP (/api/v4/mcp) requires Premium/Ultimate + GitLab
-Duo + OAuth 2.0 DCR, so it is not usable on a free account — this server is the
-free, PAT-based path and matches the blueprint's "GitLab MCP Server 0.4+".
-"""
+"""GitLab MCP Server client."""
 
 from __future__ import annotations
 
 import os
 import sys
 from typing import Any
-
+import time
 from langchain_mcp_adapters.client import MultiServerMCPClient
 
 from app.core.config import get_settings
@@ -41,10 +34,7 @@ def _gitlab_api_url() -> str:
 def _build_client() -> MultiServerMCPClient:
     settings = get_settings()
 
-    # Windows (local dev): launch the server via npx through cmd.exe.
-    # POSIX/container: call the globally-installed binary directly (the Dockerfile
-    # symlinks it to /usr/local/bin/minari-mcp). npx is avoided in the container
-    # because it ignores global installs and re-downloads from the registry.
+
     if sys.platform == "win32":
         command, args = "cmd", ["/c", "npx", "-y", "@zereight/mcp-gitlab"]
     else:
@@ -56,8 +46,7 @@ def _build_client() -> MultiServerMCPClient:
                 "transport": "stdio",
                 "command": command,
                 "args": args,
-                # Merge os.environ so npx inherits PATH/SystemRoot, then add the
-                # GitLab credentials the server reads.
+
                 "env": {
                     **os.environ,
                     "GITLAB_PERSONAL_ACCESS_TOKEN": settings.gitlab_token.get_secret_value(),
@@ -132,3 +121,102 @@ async def get_file_contents(project_id: str, file_path: str, ref: str = "main") 
     )
     log.info("mcp.result", tool="get_file_contents", bytes=len(str(result)))
     return result
+
+
+
+
+
+
+
+async def _invoke(tool_name: str, args: dict[str, Any]) -> tuple[Any, int]:
+    """Invoke an MCP tool by name; return (result, latency_ms)."""
+  
+    tools = await get_client().get_tools()
+    tool = next((t for t in tools if t.name == tool_name), None)
+    if tool is None:
+        available = ", ".join(t.name for t in tools)
+        raise RuntimeError(f"'{tool_name}' not exposed. Available: {available}")
+
+    log.info("mcp.call", tool=tool_name, args={k: str(v)[:80] for k, v in args.items()})
+    started = time.perf_counter()
+    result = await tool.ainvoke(args)
+    latency_ms = int((time.perf_counter() - started) * 1000)
+    log.info("mcp.result", tool=tool_name, bytes=len(str(result)), latency_ms=latency_ms)
+    return result, latency_ms
+
+
+
+
+
+
+
+
+
+
+
+async def get_raw_file(project_id: str, file_path: str, ref: str = "main") -> tuple[str, int]:
+    """test source as a text"""
+    result, latency = await _invoke(
+        "get_file_contents",
+        {"project_id": project_id, "file_path": file_path, "ref": ref},
+    )
+    return str(result), latency
+
+
+
+
+
+
+
+
+
+
+async def get_pipeline_jobs(project_id: str, pipeline_id: int) -> tuple[str, int]:
+    """pipeline job logs"""
+    for name in ("get_pipeline_jobs", "list_pipeline_jobs"):
+        try:
+            result, latency = await _invoke(name, {"project_id": project_id, "pipeline_id": pipeline_id})
+            return str(result), latency
+        except RuntimeError:
+            continue
+    return "", 0
+
+
+
+
+
+
+
+
+
+
+async def search_code(project_id: str, query: str) -> tuple[str, int]:
+    """semantic code search for related fixtures utilities"""
+    try:
+        result, latency = await _invoke(
+            "search_repository_code", {"project_id": project_id, "search": query}
+        )
+        return str(result), latency
+    except RuntimeError:
+        return "", 0
+    
+
+
+
+
+
+
+async def get_git_blame(project_id: str, file_path: str, ref: str = "main") -> tuple[str, int]:
+    """last modifier context"""
+    for name in ("get_file_blame", "list_commits"):
+        try:
+            args = {"project_id": project_id, "file_path": file_path, "ref": ref} \
+                if name == "get_file_blame" else {"project_id": project_id, "path": file_path}
+            result, latency = await _invoke(name, args)
+            return str(result), latency
+        except RuntimeError:
+            continue
+    return "", 0
+    
+
+

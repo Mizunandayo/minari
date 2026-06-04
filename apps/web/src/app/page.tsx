@@ -1,6 +1,7 @@
+import Link from "next/link";
 import { MetricGrid } from "@/components/ui/MetricGrid";
 import { Button } from "@/components/ui/Button";
-import { Activity } from "lucide-react";
+import { Activity, ArrowRight } from "lucide-react";
 
 export default function Home() {
   return (
@@ -18,7 +19,14 @@ export default function Home() {
           end to end through GitLab MCP, in under two minutes.
         </p>
         <div className="mt-8 flex flex-wrap gap-4">
-          <Button aria-label="View live diagnosis">Watch a live diagnosis</Button>
+          <Link
+            href="/dashboard"
+            aria-label="Open the live diagnosis dashboard"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-white px-5 py-3 text-base font-semibold text-black transition-[transform,background] duration-200 ease-out hover:-translate-y-0.5 hover:bg-white/90 focus-visible:outline-none"
+          >
+            Watch a live diagnosis
+            <ArrowRight size={18} strokeWidth={2.4} aria-hidden />
+          </Link>
           <Button variant="ghost" aria-label="Open competitor comparison">Compare vs. Datadog</Button>
         </div>
       </header>
