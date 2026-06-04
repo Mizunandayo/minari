@@ -41,5 +41,7 @@ Thumbs.db
 !.vscode/extensions.json
 
 
+# ---- Local-only planning doc ----
 MINARI_BLUEPRINT.md
+PROGRESS.md
 
