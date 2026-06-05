@@ -1,18 +1,18 @@
 """Security primitives constant-time API-key auth + security headers"""
 
 from __future__ import annotations
+
+import base64
+import hashlib
 import hmac
+import time as _time
+
 from fastapi import Header, HTTPException, status
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
+
 from app.core.config import get_settings
-import base64
-import hashlib
-import time as _time
-
-
-
 
 _UNAUTHORIZED = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,

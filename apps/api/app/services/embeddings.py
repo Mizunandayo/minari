@@ -1,15 +1,12 @@
 """768-d embeddings"""
 
 from __future__ import annotations
+
 from google import genai
 from google.genai import types
+
 from app.core.config import get_settings
 from app.core.logging import get_logger
-
-
-
-
-
 
 log = get_logger(__name__)
 EMBED_DIM = 768

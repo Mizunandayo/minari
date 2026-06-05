@@ -2,13 +2,12 @@
 
 
 from __future__ import annotations
+
 from fastapi import APIRouter
+
 from app.db.session import ping_db
 from app.schemas.common import HealthChecks, HealthResponse
 from app.services.gitlab_mcp import ping_mcp
-
-
-
 
 router = APIRouter()
 
@@ -16,6 +15,7 @@ router = APIRouter()
 
 async def _ping_redis() -> bool:
     import redis.asyncio as aioredis
+
     from app.core.config import get_settings
 
     client = aioredis.from_url(get_settings().redis_url.get_secret_value())

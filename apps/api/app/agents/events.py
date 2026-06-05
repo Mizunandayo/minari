@@ -1,28 +1,16 @@
 """Reasoning-panel""" 
 
-
-
-
 from __future__ import annotations
+
 import asyncio
 import time
 from typing import Literal
+
 from pydantic import BaseModel, Field
-
-
-
-
-
-
 
 
 def _now_ms() -> int:
     return int(time.time() * 1000)
-
-
-
-
-
 
 
 class _Base(BaseModel):
@@ -32,23 +20,10 @@ class _Base(BaseModel):
 
 
 
-
-
-
-
-
 class MCPCallEvent(_Base):
     type: Literal["mcp_call"] = "mcp_call"
     tool: str
     params_summary: str
-
-
-
-
-
-
-
-
 
 class MCPResultEvent(_Base):
     type: Literal["mcp_result"] = "mcp_result"
@@ -56,19 +31,9 @@ class MCPResultEvent(_Base):
     bytes: int
     latency_ms: int
 
-
-
-
-
-
-
-
 class ReasonEvent(_Base):
     type: Literal["reason"] = "reason"
     text: str
-
-
-
 
 
 
@@ -77,13 +42,23 @@ class DecideEvent(_Base):
     text: str
 
 
+class FixEvent(_Base):
+    type: Literal["fix"] = "fix"
+    rank: int
+    fix_category: str
+    confidence: float
+    explanation: str
+    fix_diff: str
+    language: str
+    syntax_valid: bool
+    assertions_safe: bool
+
 
 
 class DoneEvent(_Base):
     type: Literal["done"] = "done"
     confidence: float
     category: str
-
 
 
 
@@ -95,13 +70,10 @@ class ErrorEvent(_Base):
 
 
 
-
 Event = (
-    MCPCallEvent | MCPResultEvent | ReasonEvent | DecideEvent | DoneEvent | ErrorEvent
+    MCPCallEvent | MCPResultEvent | ReasonEvent | DecideEvent
+    | FixEvent | DoneEvent | ErrorEvent         
 )
-
-
-
 
 
 

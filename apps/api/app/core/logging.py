@@ -1,9 +1,11 @@
 """Structured JSON logging via structlog"""
 
 from __future__ import annotations
+
 import logging
 import sys
 from typing import Any
+
 import structlog
 
 _SENSITIVE_KEYS = {"token", "api_key", "password", "secret", "authorization", "database_url"}

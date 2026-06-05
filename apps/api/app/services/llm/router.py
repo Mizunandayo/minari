@@ -1,13 +1,10 @@
 """Adaptive model router"""
 
 from __future__ import annotations
+
 from dataclasses import dataclass
+
 from app.core.config import get_settings
-
-
-
-
-
 
 
 @dataclass(frozen=True)

@@ -2,26 +2,21 @@
 
 
 from __future__ import annotations
+
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
-from starlette.requests import Request
 from starlette.responses import JSONResponse
+
 from app.api.v1.router import api_v1
 from app.core.config import get_settings
 from app.core.logging import configure_logging, get_logger
 from app.core.rate_limit import limiter
 from app.core.security import SecurityHeadersMiddleware
 from app.db.session import close_pool, init_pool
-
-
-
-
-
-
-
 
 settings = get_settings()
 configure_logging(json_logs=settings.is_production)

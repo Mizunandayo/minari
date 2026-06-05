@@ -3,8 +3,10 @@
 import asyncio
 import json
 import uuid
+
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sse_starlette.sse import EventSourceResponse
+
 from app.agents.events import RUNS, DoneEvent, ErrorEvent, EventBus
 from app.agents.graph import GRAPH
 from app.agents.state import MinariState
@@ -12,22 +14,13 @@ from app.core.logging import get_logger
 from app.core.rate_limit import DIAGNOSIS_LIMIT, limiter
 from app.core.security import mint_stream_token, require_api_key, verify_stream_token
 from app.repositories.diagnoses_repo import create_run, finalize_run
+from app.repositories.fixes_repo import create_fixes
+from app.repositories.test_runs_repo import compute_pfs
 from app.repositories.tests_repo import upsert_test
-from app.schemas.api import DiagnoseAccepted, DiagnoseRequest, DiagnosisResult
-from app.services.pfs.engine import calculate_pfs 
-
-
-
-
-
-
-
+from app.schemas.api import DiagnoseAccepted, DiagnoseRequest
 
 log = get_logger(__name__)
 router = APIRouter()
-
-
-
 
 
 
@@ -42,11 +35,14 @@ async def _run_pipeline(state: MinariState, bus: EventBus) -> None:
             test_name=final.test_name, language=final.language,
             framework=final.framework, embedding=final.embedding,
         )
-        await finalize_run(
+        diagnosis_id = await finalize_run(
             run_id=final.run_id, test_id=test_id, status=final.status,
             pfs_score=final.pfs_score, model_used=final.model_used or "",
             diagnosis=final.diagnosis, latency_ms=0, error=None,
         )
+        if diagnosis_id and final.fixes:
+            n = await create_fixes(diagnosis_id, final.fixes.candidates)
+            log.info("diagnose.fixes.persisted", run_id=final.run_id, count=n)
         if final.diagnosis:
             await bus.emit(DoneEvent(stage="system",
                                      confidence=final.diagnosis.confidence,
@@ -79,10 +75,11 @@ async def trigger_diagnosis(request: Request, body: DiagnoseRequest) -> Diagnose
     run_id = str(uuid.uuid4())
     bus = EventBus()
     RUNS[run_id] = bus
+    pfs = await compute_pfs(body.project_id, body.file_path, body.test_name)
     state = MinariState(
         run_id=run_id, project_id=body.project_id, file_path=body.file_path,
         test_name=body.test_name, ref=body.ref, pipeline_id=body.pipeline_id,
-        pfs_score=50.0,  
+        pfs_score=pfs,
     )
     await create_run(run_id=run_id, project_id=body.project_id,
                      file_path=body.file_path, test_name=body.test_name)
@@ -112,7 +109,8 @@ async def stream_diagnosis(run_id: str, token: str, request: Request) -> EventSo
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid stream token")
     bus = RUNS.get(run_id)
     if bus is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Unknown or completed run")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Unknown or completed run")
 
     async def gen():
         try:

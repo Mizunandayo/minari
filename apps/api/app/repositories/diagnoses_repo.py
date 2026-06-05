@@ -3,17 +3,11 @@
 
 
 from __future__ import annotations
+
 import json
+
 from app.db.session import get_pool
 from app.schemas.diagnosis import Diagnosis
-
-
-
-
-
-
-
-
 
 
 async def create_run(*, run_id: str, project_id: str, file_path: str, test_name: str) -> None:
@@ -34,21 +28,13 @@ async def create_run(*, run_id: str, project_id: str, file_path: str, test_name:
 
 
 
-
-
-
-
-
-
-
-
 async def finalize_run(
     *, run_id: str, test_id: str | None, status: str, pfs_score: float,
     model_used: str, diagnosis: Diagnosis | None, latency_ms: int, error: str | None,
-) -> None:
+) -> str | None:                                
     pool = get_pool()
     if pool is None:
-        return
+        return None                                 
     async with pool.acquire() as conn:
         diagnosis_id = None
         if diagnosis is not None and test_id is not None:
@@ -69,3 +55,4 @@ async def finalize_run(
                where id=$1""",
             run_id, status, pfs_score, model_used, diagnosis_id, latency_ms, error,
         )
+        return str(diagnosis_id) if diagnosis_id is not None else None   

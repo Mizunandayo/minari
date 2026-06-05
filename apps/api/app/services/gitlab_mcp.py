@@ -2,17 +2,18 @@
 
 from __future__ import annotations
 
+import base64
+import binascii
+import json
 import os
 import sys
-from typing import Any
 import time
+from typing import Any
+
 from langchain_mcp_adapters.client import MultiServerMCPClient
 
 from app.core.config import get_settings
 from app.core.logging import get_logger
-
-
-
 
 log = get_logger(__name__)
 _client: MultiServerMCPClient | None = None
@@ -154,13 +155,39 @@ async def _invoke(tool_name: str, args: dict[str, Any]) -> tuple[Any, int]:
 
 
 
+def _extract_file_content(raw: str) -> str:
+    """Pull the actual source out of the MCP get_file_contents envelope.
+
+    @zereight/mcp-gitlab returns a JSON object describing the file
+    ({file_name, size, encoding, content, ...}) — NOT the raw code. The real
+    source lives in `content` (base64 when `encoding == "base64"`, otherwise
+    plain text). Returning the whole JSON blob made the Fixer emit non-parseable
+    output. Degrades gracefully to the raw string if the shape ever changes.
+    """
+    try:
+        obj = json.loads(raw)
+    except (json.JSONDecodeError, TypeError, ValueError):
+        return raw
+    if not isinstance(obj, dict) or "content" not in obj:
+        return raw
+    content = obj["content"]
+    if not isinstance(content, str):
+        return raw
+    if obj.get("encoding") == "base64":
+        try:
+            return base64.b64decode(content).decode("utf-8", errors="replace")
+        except (binascii.Error, ValueError):
+            return content
+    return content
+
+
 async def get_raw_file(project_id: str, file_path: str, ref: str = "main") -> tuple[str, int]:
     """test source as a text"""
     result, latency = await _invoke(
         "get_file_contents",
         {"project_id": project_id, "file_path": file_path, "ref": ref},
     )
-    return str(result), latency
+    return _extract_file_content(str(result)), latency
 
 
 
@@ -175,7 +202,8 @@ async def get_pipeline_jobs(project_id: str, pipeline_id: int) -> tuple[str, int
     """pipeline job logs"""
     for name in ("get_pipeline_jobs", "list_pipeline_jobs"):
         try:
-            result, latency = await _invoke(name, {"project_id": project_id, "pipeline_id": pipeline_id})
+            result, latency = await _invoke(
+                name, {"project_id": project_id, "pipeline_id": pipeline_id})
             return str(result), latency
         except RuntimeError:
             continue

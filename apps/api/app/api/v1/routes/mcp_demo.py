@@ -3,14 +3,14 @@
 
 
 from __future__ import annotations
+
 from fastapi import APIRouter, Depends, Request
+
 from app.core.config import get_settings
 from app.core.rate_limit import DIAGNOSIS_LIMIT, limiter
 from app.core.security import require_api_key
 from app.schemas.common import Envelope
 from app.services.gitlab_mcp import get_file_contents, list_tool_names
-
-
 
 router = APIRouter(dependencies=[Depends(require_api_key)])
 

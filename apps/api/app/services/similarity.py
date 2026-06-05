@@ -3,13 +3,11 @@
 
 
 from __future__ import annotations
+
 from pgvector.asyncpg import register_vector
+
 from app.core.logging import get_logger
 from app.db.session import get_pool
-
-
-
-
 
 log = get_logger(__name__)
 

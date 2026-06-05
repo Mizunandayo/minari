@@ -1,14 +1,15 @@
 """Dashboard read endpoints (API-key protected)."""
 
 from __future__ import annotations
+
 from fastapi import APIRouter, Depends, Request
+
 from app.core.config import get_settings
 from app.core.rate_limit import limiter
 from app.core.security import require_api_key
 from app.repositories.tests_repo import list_tests
 from app.schemas.api import TestListItem
 from app.schemas.common import Envelope
-
 
 router = APIRouter(dependencies=[Depends(require_api_key)])
 

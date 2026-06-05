@@ -4,11 +4,10 @@
 
 
 from __future__ import annotations
+
 from pgvector.asyncpg import register_vector
+
 from app.db.session import get_pool
-
-
-
 
 
 async def upsert_test(

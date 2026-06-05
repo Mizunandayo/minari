@@ -5,19 +5,17 @@
 
 
 from __future__ import annotations
+
 import json
 import time
+
 import httpx
 from pydantic import ValidationError
+
 from app.core.config import get_settings
 from app.core.logging import get_logger
 from app.schemas.diagnosis import Diagnosis
 from app.services.llm.prompts import SYSTEM_PROMPT, build_repair_prompt
-
-
-
-
-
 
 log = get_logger(__name__)
 MAX_REPAIRS = 2
@@ -54,7 +52,8 @@ async def diagnose_with_deepseek(model: str, prompt: str) -> tuple[Diagnosis, in
             resp.raise_for_status()
             choice = resp.json()["choices"][0]["message"]
             reasoning_trace = choice.get("reasoning_content", "") or reasoning_trace
-            raw = choice["content"].strip().removeprefix("```json").removeprefix("```").removesuffix("```")
+            raw = (choice["content"].strip()
+                   .removeprefix("```json").removeprefix("```").removesuffix("```"))
             try:
                 diagnosis = Diagnosis.model_validate_json(raw)
                 latency = int((time.perf_counter() - started) * 1000)

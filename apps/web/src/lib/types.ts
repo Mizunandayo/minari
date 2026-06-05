@@ -33,3 +33,26 @@ export interface TestListItem {
   category: RootCause | null;
   confidence: number | null;
 }
+
+
+
+export type FixCategory = "sync" | "wait" | "isolate" | "timeout" | "resource";
+
+export interface FixCandidate {
+  rank: number;
+  fix_category: FixCategory;
+  confidence: number;
+  explanation: string;
+  fix_diff: string;
+  language: string;
+}
+
+
+export type FixStreamEvent = {
+  type: "fix"; stage: string; ts_ms: number; rank: number; fix_category: FixCategory;
+  confidence: number; explanation: string; fix_diff: string; language: string;
+  syntax_valid: boolean; assertions_safe: boolean;
+};
+
+
+export type AnyStreamEvent = ReasoningEvent | FixStreamEvent;

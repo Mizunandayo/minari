@@ -1,7 +1,6 @@
 from app.services.pfs.engine import TestRun, Verdict, calculate_pfs
 
 
-
 def _runs(spec: list[tuple[bool, int]]) -> list[TestRun]:
     return [TestRun(passed=p, duration_ms=d) for p, d in spec]
 

@@ -5,11 +5,11 @@
 
 
 from __future__ import annotations
+
 from pydantic import BaseModel, ConfigDict, Field
+
 from app.schemas.diagnosis import Diagnosis
-
-
-
+from app.schemas.fix import FixCandidates
 
 
 class MinariState(BaseModel):
@@ -40,5 +40,6 @@ class MinariState(BaseModel):
 
     # outputs
     diagnosis: Diagnosis | None = None
-    status: str = "running"        
+    fixes: FixCandidates | None = None        
+    status: str = "running"
     error: str | None = None

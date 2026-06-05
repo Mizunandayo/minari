@@ -2,24 +2,18 @@
 
 
 from __future__ import annotations
+
 import time
+
 from google import genai
 from google.genai import types
 from pydantic import ValidationError
 from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
+
 from app.core.config import get_settings
 from app.core.logging import get_logger
 from app.schemas.diagnosis import Diagnosis
 from app.services.llm.prompts import SYSTEM_PROMPT, build_repair_prompt
-
-
-
-
-
-
-
-
-
 
 log = get_logger(__name__)
 _client: genai.Client | None = None
@@ -103,6 +97,7 @@ async def diagnose_with_gemini(model: str, prompt: str) -> tuple[Diagnosis, int]
             log.info("gemini.diagnosis.ok", model=model, attempt=attempt, latency_ms=latency)
             return diagnosis, latency
         except ValidationError as ve:
-            log.warning("gemini.diagnosis.repair", model=model, attempt=attempt, error=str(ve)[:300])
+            log.warning("gemini.diagnosis.repair", model=model, attempt=attempt,
+                        error=str(ve)[:300])
             contents = [prompt, build_repair_prompt(last_raw, str(ve))]
     raise RuntimeError("Gemini structured output failed schema after repairs")

@@ -4,12 +4,12 @@ All secrets are typed as ``SecretStr`` to prevent appearing in logs."""
 
 
 from __future__ import annotations
+
 from functools import lru_cache
 from typing import Annotated, Literal
+
 from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
-
-
 
 
 class Settings(BaseSettings):

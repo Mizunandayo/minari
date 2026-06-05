@@ -1,11 +1,8 @@
 """Thre layers of prompt construction"""
 
 from __future__ import annotations
+
 from app.schemas.diagnosis import Diagnosis
-
-
-
-
 
 SYSTEM_PROMPT = (
     "You are Minari, a senior test-reliability engineer with 15 years debugging "

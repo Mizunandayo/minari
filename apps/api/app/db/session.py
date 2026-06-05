@@ -2,10 +2,11 @@
 
 
 from __future__ import annotations
+
 import asyncpg
+
 from app.core.config import get_settings
 from app.core.logging import get_logger
-
 
 log = get_logger(__name__)
 _pool: asyncpg.Pool | None = None
