@@ -17,6 +17,7 @@ from app.repositories.diagnoses_repo import create_run, finalize_run
 from app.repositories.fixes_repo import create_fixes
 from app.repositories.test_runs_repo import compute_pfs
 from app.repositories.tests_repo import upsert_test
+from app.repositories.verifications_repo import create_verification
 from app.schemas.api import DiagnoseAccepted, DiagnoseRequest
 
 log = get_logger(__name__)
@@ -41,8 +42,14 @@ async def _run_pipeline(state: MinariState, bus: EventBus) -> None:
             diagnosis=final.diagnosis, latency_ms=0, error=None,
         )
         if diagnosis_id and final.fixes:
-            n = await create_fixes(diagnosis_id, final.fixes.candidates)
-            log.info("diagnose.fixes.persisted", run_id=final.run_id, count=n)
+            id_map = await create_fixes(diagnosis_id, final.fixes.candidates)
+            log.info("diagnose.fixes.persisted", run_id=final.run_id, count=len(id_map))
+            if final.verification and final.verification.chosen_rank in id_map:
+                fix_id = id_map[final.verification.chosen_rank]
+                vid = await create_verification(fix_id, final.verification)
+                log.info("diagnose.verification.persisted",
+                         run_id=final.run_id, verification_id=vid,
+                         gate_passed=final.verification.gate_passed)
         if final.diagnosis:
             await bus.emit(DoneEvent(stage="system",
                                      confidence=final.diagnosis.confidence,

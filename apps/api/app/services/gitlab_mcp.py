@@ -52,6 +52,10 @@ def _build_client() -> MultiServerMCPClient:
                     **os.environ,
                     "GITLAB_PERSONAL_ACCESS_TOKEN": settings.gitlab_token.get_secret_value(),
                     "GITLAB_API_URL": _gitlab_api_url(),
+                    # @zereight/mcp-gitlab gates its CI/CD tools (create_pipeline,
+                    # get_pipeline, list_pipeline_jobs, ...) behind this flag — the
+                    # Validator needs them. Without it they are not exposed.
+                    "USE_PIPELINE": "true",
                 },
             }
         }
@@ -101,13 +105,6 @@ async def ping_mcp() -> bool:
 
 
 
-
-
-    
-
-
-
-
 async def get_file_contents(project_id: str, file_path: str, ref: str = "main") -> Any:
 
     tools = await get_client().get_tools()
@@ -122,7 +119,6 @@ async def get_file_contents(project_id: str, file_path: str, ref: str = "main") 
     )
     log.info("mcp.result", tool="get_file_contents", bytes=len(str(result)))
     return result
-
 
 
 
@@ -144,12 +140,6 @@ async def _invoke(tool_name: str, args: dict[str, Any]) -> tuple[Any, int]:
     latency_ms = int((time.perf_counter() - started) * 1000)
     log.info("mcp.result", tool=tool_name, bytes=len(str(result)), latency_ms=latency_ms)
     return result, latency_ms
-
-
-
-
-
-
 
 
 
@@ -203,7 +193,7 @@ async def get_pipeline_jobs(project_id: str, pipeline_id: int) -> tuple[str, int
     for name in ("get_pipeline_jobs", "list_pipeline_jobs"):
         try:
             result, latency = await _invoke(
-                name, {"project_id": project_id, "pipeline_id": pipeline_id})
+                name, {"project_id": project_id, "pipeline_id": str(pipeline_id)})
             return str(result), latency
         except RuntimeError:
             continue
@@ -248,3 +238,68 @@ async def get_git_blame(project_id: str, file_path: str, ref: str = "main") -> t
     
 
 
+
+
+
+async def create_branch(project_id: str, branch: str, ref: str = "main") -> tuple[Any, int]:
+    """Create a fix branch off `ref`. Idempotent-ish: a 'already exists' is tolerated."""
+    try:
+        return await _invoke("create_branch",
+                             {"project_id": project_id, "branch": branch, "ref": ref})
+    except RuntimeError:
+        return await _invoke("create_branch",
+                             {"project_id": project_id, "branch": branch, "ref_name": ref})
+
+
+async def push_files(
+    project_id: str, branch: str, commit_message: str, files: list[dict[str, str]],
+) -> tuple[Any, int]:
+    """Commit each file via create_or_update_file (an UPSERT).
+
+    `files` = [{"file_path": ..., "content": ...}, ...]
+
+    The MCP `push_files` tool uses create-only commit actions and the GitLab API
+    400s with "A file with this name already exists" when the path already exists
+    (our case — we rewrite an existing test file and overwrite .gitlab-ci.yml).
+    create_or_update_file updates an existing file cleanly, so we loop it (one
+    commit per file; the final branch state is what the triggered pipeline reads).
+    """
+    last: tuple[Any, int] = ("", 0)
+    for f in files:
+        last = await _invoke("create_or_update_file", {
+            "project_id": project_id, "branch": branch,
+            "file_path": f["file_path"], "content": f["content"],
+            "commit_message": commit_message,
+        })
+    return last
+
+
+async def trigger_pipeline(project_id: str, ref: str) -> tuple[Any, int]:
+    """Start a pipeline on `ref` (runs the .gitlab-ci.yml committed to that branch)."""
+    for name in ("create_pipeline", "trigger_pipeline", "run_pipeline"):
+        try:
+            return await _invoke(name, {"project_id": project_id, "ref": ref})
+        except RuntimeError:
+            continue
+    raise RuntimeError("no pipeline-trigger tool exposed by the MCP server")
+
+
+async def get_pipeline(project_id: str, pipeline_id: int) -> tuple[Any, int]:
+    for name in ("get_pipeline", "get_pipeline_status"):
+        try:
+            return await _invoke(
+                name, {"project_id": project_id, "pipeline_id": str(pipeline_id)})
+        except RuntimeError:
+            continue
+    return "", 0
+
+
+async def create_issue(
+    project_id: str, title: str, description: str, labels: list[str] | None = None,
+) -> tuple[Any, int]:
+    """Human-handoff fallback when the gate ultimately fails."""
+    args: dict[str, Any] = {"project_id": project_id, "title": title,
+                            "description": description}
+    if labels:
+        args["labels"] = labels        # schema expects an array of label names
+    return await _invoke("create_issue", args)

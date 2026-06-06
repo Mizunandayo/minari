@@ -19,16 +19,23 @@ def _after_detective(state: MinariState) -> str:
 
 
 
+def _after_fixer(state: MinariState) -> str:
+
+    if state.fixes is not None and state.fixes.candidates:
+        return "validator"
+    return END
+
+
 def build_graph():
     g = StateGraph(MinariState)
     g.add_node("detective", detective_node)
     g.add_node("fixer", fixer_node)
     g.add_node("validator", validator_node)
     g.add_node("merger", merger_node)
-
     g.add_edge(START, "detective")
     g.add_conditional_edges("detective", _after_detective, {"fixer": "fixer", END: END})
-    g.add_edge("fixer", END)       
+    g.add_conditional_edges("fixer", _after_fixer, {"validator": "validator", END: END})
+    g.add_edge("validator", END)      
     return g.compile()
 
 

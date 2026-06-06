@@ -5,15 +5,20 @@ export type RootCause = "async" | "race" | "resource" | "network" | "data";
 
 
 
+
 export type ReasoningEvent =
   | { type: "mcp_call"; stage: string; ts_ms: number; tool: string; params_summary: string }
   | { type: "mcp_result"; stage: string; ts_ms: number; tool: string; bytes: number; latency_ms: number }
   | { type: "reason"; stage: string; ts_ms: number; text: string }
   | { type: "decide"; stage: string; ts_ms: number; text: string }
+  | { type: "verify"; stage: string; ts_ms: number; run_index: number; total_runs: number;
+      passed: boolean; duration_ms: number; gate_passed: boolean; variance_reduction_pct: number }
+  | { type: "heal"; stage: string; ts_ms: number; attempt: number; reason: string }
   | { type: "done"; stage: string; ts_ms: number; confidence: number; category: RootCause }
   | { type: "error"; stage: string; ts_ms: number; message: string };
 
 
+  
 
 export interface DiagnoseAccepted {
   run_id: string;

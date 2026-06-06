@@ -55,48 +55,56 @@ async def fixer_node(state: MinariState) -> MinariState:
     ))
 
 
-    raw, _ = await generate_fixes(
-        fix_model,
-        test_name=state.test_name, language=info.language, framework=info.framework,
-        test_source=state.test_source, diagnosis=state.diagnosis,
-    )
+    async def _generate_and_filter() -> list[FixCandidate]:
+        raw, _ = await generate_fixes(
+            fix_model,
+            test_name=state.test_name, language=info.language, framework=info.framework,
+            test_source=state.test_source, diagnosis=state.diagnosis,
+        )
+        survivors: list[FixCandidate] = []
+        for draft in sorted(raw.candidates, key=lambda x: x.rank):
+            # Enrich the model's draft with our computed, validated fields.
+            c = FixCandidate(**draft.model_dump())
+            c.syntax_valid = is_syntax_valid(info.grammar, c.fixed_source)
+            c.assertions_safe = assertions_preserved(
+                info.grammar, state.test_source, c.fixed_source)
+            c.fix_diff = unified_diff(state.test_source, c.fixed_source, state.file_path)
+
+            if not c.syntax_valid:
+                await emit(DecideEvent(
+                    stage="fixer",
+                    text=f"Candidate {c.rank} rejected — generated code is "
+                         "not syntactically valid."))
+                continue
+            if not c.assertions_safe:
+                await emit(DecideEvent(
+                    stage="fixer",
+                    text=f"Candidate {c.rank} rejected — it modifies a test "
+                         "assertion (safety boundary)."))
+                continue
+            if not imports_present(info.grammar, c.fixed_source):
+                await emit(ReasonEvent(
+                    stage="fixer",
+                    text=f"Candidate {c.rank}: heads-up — a referenced module "
+                         "may be missing an import."))
+
+            survivors.append(c)
+            await emit(FixEvent(
+                stage="fixer", rank=c.rank, fix_category=c.fix_category.value,
+                confidence=c.confidence, explanation=c.explanation, fix_diff=c.fix_diff,
+                language=info.language, syntax_valid=True, assertions_safe=True,
+            ))
+        return survivors
 
 
-    safe: list[FixCandidate] = []
-    for draft in sorted(raw.candidates, key=lambda x: x.rank):
-        # Enrich the model's draft with our computed, validated fields.
-        c = FixCandidate(**draft.model_dump())
-        c.syntax_valid = is_syntax_valid(info.grammar, c.fixed_source)
-        c.assertions_safe = assertions_preserved(info.grammar, state.test_source, c.fixed_source)
-        c.fix_diff = unified_diff(state.test_source, c.fixed_source, state.file_path)
-
-        if not c.syntax_valid:
-            await emit(DecideEvent(
-                stage="fixer",
-                text=f"Candidate {c.rank} rejected — generated code is "
-                     "not syntactically valid."))
-            continue
-        if not c.assertions_safe:
-            await emit(DecideEvent(
-                stage="fixer",
-                text=f"Candidate {c.rank} rejected — it modifies a test "
-                     "assertion (safety boundary)."))
-            continue
-        if not imports_present(info.grammar, c.fixed_source):
-            await emit(ReasonEvent(
-                stage="fixer",
-                text=f"Candidate {c.rank}: heads-up — a referenced module "
-                     "may be missing an import."))
-
-
-        safe.append(c)
-        await emit(FixEvent(
-            stage="fixer", rank=c.rank, fix_category=c.fix_category.value,
-            confidence=c.confidence, explanation=c.explanation, fix_diff=c.fix_diff,
-            language=info.language, syntax_valid=True, assertions_safe=True,
-        ))
-
-
+    safe = await _generate_and_filter()
+    # Flash at temperature occasionally emits a whole batch of invalid candidates.
+    # One regeneration recovers most of those without dead-ending the pipeline.
+    if not safe:
+        await emit(DecideEvent(
+            stage="fixer",
+            text="No candidate passed the safety gates — regenerating once."))
+        safe = await _generate_and_filter()
 
 
     safe.sort(key=lambda x: x.confidence, reverse=True)
@@ -113,6 +121,6 @@ async def fixer_node(state: MinariState) -> MinariState:
         state.status = "degraded"
 
 
-    log.info("fixer.done", run_id=state.run_id, generated=len(raw.candidates),
+    log.info("fixer.done", run_id=state.run_id,
              safe=len(safe), ms=int((time.perf_counter() - started) * 1000))
     return state

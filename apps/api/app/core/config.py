@@ -57,6 +57,20 @@ class Settings(BaseSettings):
     #Streaming auth
     stream_token_ttl_seconds: int = 120
 
+
+    # VALIDATOR
+    validator_dry_run: bool = False
+    validator_runs: int = 5
+    validator_poll_seconds: int = 5
+    validator_timeout_seconds: int = 300
+    validator_max_heals: int = 2
+    validator_variance_reduction_min: float = 0.80  
+    validator_runtime_tolerance: float = 1.50     
+    validator_ci_image: str = "python:3.12-slim"
+    allowed_project_ids: Annotated[list[str], NoDecode] = Field(default_factory=list)
+
+
+
     # OBSERVABILITY
     langfuse_public_key: SecretStr | None = None
     langfuse_secret_key: SecretStr | None = None
@@ -83,9 +97,6 @@ class Settings(BaseSettings):
     )
     @classmethod
     def _blank_to_none(cls, value: object) -> object:
-        # A blank env line ("MINARI_DEEPSEEK_API_KEY=") must read as absent, not
-        # SecretStr("") — otherwise router.py treats DeepSeek as configured and
-        # routes PFS>75 cases to it → 402 Insufficient Balance.
         if isinstance(value, str) and not value.strip():
             return None
         return value
@@ -93,6 +104,21 @@ class Settings(BaseSettings):
     @property
     def is_production(self) -> bool:
         return self.env == "production"
+    
+    @field_validator("allowed_project_ids", mode="before")
+    @classmethod
+    def _split_project_ids(cls, value: object) -> object:
+        if isinstance(value, str):
+            return [p.strip() for p in value.split(",") if p.strip()]
+        return value
+
+    @property
+    def write_allowlist(self) -> frozenset[str]:
+        """Projects the Validator is permitted to branch/push/trigger against."""
+        ids = set(self.allowed_project_ids)
+        ids.add(self.demo_project_id)       
+        return frozenset(ids)
+
     
 
 @lru_cache(maxsize=1)

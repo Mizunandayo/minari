@@ -55,6 +55,22 @@ class FixEvent(_Base):
 
 
 
+class VerifyEvent(_Base):
+    type: Literal["verify"] = "verify"
+    run_index: int
+    total_runs: int
+    passed: bool
+    duration_ms: float
+    gate_passed: bool = False
+    variance_reduction_pct: float = 0.0
+
+
+class HealEvent(_Base):
+    type: Literal["heal"] = "heal"
+    attempt: int
+    reason: str
+
+
 class DoneEvent(_Base):
     type: Literal["done"] = "done"
     confidence: float
@@ -72,10 +88,8 @@ class ErrorEvent(_Base):
 
 Event = (
     MCPCallEvent | MCPResultEvent | ReasonEvent | DecideEvent
-    | FixEvent | DoneEvent | ErrorEvent         
+    | FixEvent | VerifyEvent | HealEvent | DoneEvent | ErrorEvent
 )
-
-
 
 class EventBus:
     """Single-run pub/sub backed by asyncio.queue"""

@@ -30,3 +30,27 @@ async def compute_pfs(project_id: str, file_path: str, test_name: str) -> float:
         for r in reversed(rows)
     ]
     return calculate_pfs(runs).score
+
+
+
+async def recent_durations(
+    project_id: str, file_path: str, test_name: str, limit: int = 20,
+) -> list[float]:
+    """Pre-fix run durations (ms) for the variance-reduction baseline."""
+    pool = get_pool()
+    if pool is None:
+        return []
+    async with pool.acquire() as conn:
+        rows = await conn.fetch(
+            """
+            select r.duration_ms
+            from test_runs r
+            join tests t on t.id = r.test_id
+            where t.project_id = $1 and t.file_path = $2 and t.test_name = $3
+              and r.duration_ms is not null
+            order by r.created_at desc
+            limit $4
+            """,
+            project_id, file_path, test_name, limit,
+        )
+    return [float(r["duration_ms"]) for r in rows]

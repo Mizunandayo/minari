@@ -10,6 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from app.schemas.diagnosis import Diagnosis
 from app.schemas.fix import FixCandidates
+from app.schemas.verification import VerificationReport
 
 
 class MinariState(BaseModel):
@@ -40,6 +41,7 @@ class MinariState(BaseModel):
 
     # outputs
     diagnosis: Diagnosis | None = None
-    fixes: FixCandidates | None = None        
+    fixes: FixCandidates | None = None
+    verification: VerificationReport | None = None    
     status: str = "running"
     error: str | None = None
