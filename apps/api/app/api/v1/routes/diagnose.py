@@ -15,6 +15,7 @@ from app.core.rate_limit import DIAGNOSIS_LIMIT, limiter
 from app.core.security import mint_stream_token, require_api_key, verify_stream_token
 from app.repositories.diagnoses_repo import create_run, finalize_run
 from app.repositories.fixes_repo import create_fixes
+from app.repositories.merge_requests_repo import create_merge_request_record
 from app.repositories.test_runs_repo import compute_pfs
 from app.repositories.tests_repo import upsert_test
 from app.repositories.verifications_repo import create_verification
@@ -50,6 +51,11 @@ async def _run_pipeline(state: MinariState, bus: EventBus) -> None:
                 log.info("diagnose.verification.persisted",
                          run_id=final.run_id, verification_id=vid,
                          gate_passed=final.verification.gate_passed)
+                if vid and final.merge:
+                    mr_record_id = await create_merge_request_record(vid, final.merge)
+                    log.info("diagnose.mr.persisted",
+                             run_id=final.run_id, mr_record_id=mr_record_id,
+                             mr_iid=final.merge.mr_iid)
         if final.diagnosis:
             await bus.emit(DoneEvent(stage="system",
                                      confidence=final.diagnosis.confidence,

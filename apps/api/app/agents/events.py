@@ -84,12 +84,27 @@ class ErrorEvent(_Base):
 
 
 
+class MergeEvent(_Base):
+    type: Literal["merge"] = "merge"
+    mr_iid: int | None = None
+    mr_url: str | None = None
+    assigned_to: str | None = None
+    detection_confidence: float = 0.0
+    diagnosis_confidence: float = 0.0
+    fix_confidence: float = 0.0
+    verification_confidence: float = 0.0
+    overall_confidence: float = 0.0
+
+
 
 
 Event = (
     MCPCallEvent | MCPResultEvent | ReasonEvent | DecideEvent
-    | FixEvent | VerifyEvent | HealEvent | DoneEvent | ErrorEvent
+    | FixEvent | VerifyEvent | HealEvent | MergeEvent | DoneEvent | ErrorEvent
 )
+
+
+
 
 class EventBus:
     """Single-run pub/sub backed by asyncio.queue"""

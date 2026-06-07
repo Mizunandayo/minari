@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Terminal, Database, Brain, GitBranch, CheckCircle2, AlertTriangle, ShieldCheck, Wrench } from "lucide-react";
+import { Terminal, Database, Brain, GitBranch, GitPullRequest, CheckCircle2, AlertTriangle, ShieldCheck, Wrench } from "lucide-react";
 import type { ReasoningEvent } from "@/lib/types";
 
 
@@ -14,6 +14,7 @@ const META: Record<ReasoningEvent["type"], { icon: typeof Terminal; label: strin
   decide:     { icon: Terminal,     label: "DECIDE",     tone: "var(--color-warn)" },
   verify:     { icon: ShieldCheck,  label: "VERIFY",     tone: "var(--color-pass)" },
   heal:       { icon: Wrench,       label: "SELF-HEAL",  tone: "var(--color-warn)" },
+  merge:      { icon: GitPullRequest, label: "MERGE",    tone: "var(--color-pass)" },
   done:       { icon: CheckCircle2, label: "DONE",       tone: "var(--color-pass)" },
   error:      { icon: AlertTriangle,label: "ERROR",      tone: "var(--color-crit)" },
 };
@@ -35,6 +36,9 @@ function body(e: ReasoningEvent): string {
                                   + ` · variance −${(e.variance_reduction_pct * 100).toFixed(0)}%`
                                 : "");
     case "heal":       return `Attempt ${e.attempt}: ${e.reason}`;
+    case "merge":      return e.mr_iid !== null
+                            ? `Merge request !${e.mr_iid} opened · reviewer ${e.assigned_to ?? "unassigned"} · confidence ${(e.overall_confidence * 100).toFixed(0)}%`
+                            : "Merge request endpoint returned no id";
     case "done":       return `Diagnosis complete · ${e.category} · confidence ${(e.confidence * 100).toFixed(0)}%`;
     case "error":      return e.message;
   }

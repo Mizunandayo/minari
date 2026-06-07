@@ -14,11 +14,15 @@ export type ReasoningEvent =
   | { type: "verify"; stage: string; ts_ms: number; run_index: number; total_runs: number;
       passed: boolean; duration_ms: number; gate_passed: boolean; variance_reduction_pct: number }
   | { type: "heal"; stage: string; ts_ms: number; attempt: number; reason: string }
+  | { type: "merge"; stage: string; ts_ms: number; mr_iid: number | null; mr_url: string | null;
+      assigned_to: string | null; detection_confidence: number; diagnosis_confidence: number;
+      fix_confidence: number; verification_confidence: number; overall_confidence: number }
   | { type: "done"; stage: string; ts_ms: number; confidence: number; category: RootCause }
   | { type: "error"; stage: string; ts_ms: number; message: string };
 
 
-  
+export type StageKey = "detect" | "diagnose" | "fix" | "verify" | "deliver";
+export type StageStatus = "pending" | "active" | "done" | "failed";
 
 export interface DiagnoseAccepted {
   run_id: string;

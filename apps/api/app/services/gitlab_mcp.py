@@ -52,9 +52,6 @@ def _build_client() -> MultiServerMCPClient:
                     **os.environ,
                     "GITLAB_PERSONAL_ACCESS_TOKEN": settings.gitlab_token.get_secret_value(),
                     "GITLAB_API_URL": _gitlab_api_url(),
-                    # @zereight/mcp-gitlab gates its CI/CD tools (create_pipeline,
-                    # get_pipeline, list_pipeline_jobs, ...) behind this flag — the
-                    # Validator needs them. Without it they are not exposed.
                     "USE_PIPELINE": "true",
                 },
             }
@@ -301,5 +298,85 @@ async def create_issue(
     args: dict[str, Any] = {"project_id": project_id, "title": title,
                             "description": description}
     if labels:
-        args["labels"] = labels        # schema expects an array of label names
+        args["labels"] = labels       
     return await _invoke("create_issue", args)
+
+
+
+
+
+
+
+async def create_merge_request(
+    project_id: str, *, source_branch: str, target_branch: str, title: str,
+    description: str, labels: list[str] | None = None,
+    reviewer_ids: list[int] | None = None,
+    remove_source_branch: bool = True, squash: bool = True,
+) -> tuple[Any, int]:
+    """Open an MR. NEVER merges — there is no merge call anywhere in Minari."""
+    args: dict[str, Any] = {
+        "project_id": project_id, "source_branch": source_branch,
+        "target_branch": target_branch, "title": title,
+        "description": description,
+        "remove_source_branch": remove_source_branch, "squash": squash,
+    }
+    if labels:
+        args["labels"] = labels       
+    if reviewer_ids:
+        args["reviewer_ids"] = reviewer_ids
+        args["assignee_ids"] = reviewer_ids
+    return await _invoke("create_merge_request", args)
+
+
+
+
+
+
+
+
+async def create_mr_note(
+    project_id: str, mr_iid: int, body: str,
+) -> tuple[Any, int]:
+    """Attach a comment. Tool name varies across @zereight versions."""
+    for name in ("create_merge_request_note", "create_merge_request_thread",
+                 "add_merge_request_comment"):
+        try:
+            return await _invoke(name, {
+                "project_id": project_id,
+                "merge_request_iid": str(mr_iid), "body": body,
+            })
+        except RuntimeError:
+            continue
+    raise RuntimeError("no MR-note tool exposed by the MCP server")
+
+
+
+
+
+
+async def lookup_user(query: str) -> tuple[int | None, str | None]:
+    """Resolve a GitLab user id by email/username. Best-effort -> (id, name)."""
+    for key in ("search", "username"):
+        try:
+            result, _ = await _invoke("get_users", {key: query})
+        except RuntimeError:
+            continue
+        try:
+            obj = json.loads(str(result))
+        except (json.JSONDecodeError, ValueError, TypeError):
+            continue
+        users = obj if isinstance(obj, list) else (
+            obj.get("users") if isinstance(obj, dict) else None)
+        if isinstance(users, list) and users and isinstance(users[0], dict):
+            u = users[0]
+            if isinstance(u.get("id"), int):
+                return u["id"], u.get("name") or u.get("username")
+    return None, None
+
+
+
+
+
+
+
+

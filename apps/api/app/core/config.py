@@ -70,6 +70,12 @@ class Settings(BaseSettings):
     allowed_project_ids: Annotated[list[str], NoDecode] = Field(default_factory=list)
 
 
+    # MERGER
+    merger_dry_run: bool = False
+    mr_target_branch: str = "main"
+    default_reviewer_id: int | None = None  
+    auto_merge: bool = False     
+
 
     # OBSERVABILITY
     langfuse_public_key: SecretStr | None = None

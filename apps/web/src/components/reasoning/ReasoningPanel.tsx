@@ -8,7 +8,9 @@ import { EventCard } from "./EventCard";
 import { startDiagnosis, streamUrl } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
 import { FixCandidateList } from "@/components/fixes/FixCandidateList";
-
+import { StageTracker } from "@/components/delivery/StageTracker";
+import { ConfidenceCascade } from "@/components/delivery/ConfidenceCascade";
+import { MergeRequestCard } from "@/components/delivery/MergeRequestCard";
 
 
 
@@ -34,6 +36,7 @@ export function ReasoningPanel({ projectId, filePath, testName }: {
 
   return (
     <div>
+      <StageTracker events={events} />
       <section className="rounded-2xl border border-white/[0.14] bg-[#08080a] shadow-[0_8px_40px_-12px_rgba(0,0,0,0.7)]">
         <header className="flex items-center justify-between border-b border-white/[0.10] px-5 py-3.5">
           <div className="flex items-center gap-2.5">
@@ -57,6 +60,8 @@ export function ReasoningPanel({ projectId, filePath, testName }: {
         </div>
       </section>
       <FixCandidateList fixes={fixes} />
+      <ConfidenceCascade events={events} />
+      <MergeRequestCard events={events} />
     </div>
   );
 }

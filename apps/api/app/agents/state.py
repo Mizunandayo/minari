@@ -1,15 +1,13 @@
 """MinariState"""
 
 
-
-
-
 from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.schemas.diagnosis import Diagnosis
 from app.schemas.fix import FixCandidates
+from app.schemas.merge import MergeReport
 from app.schemas.verification import VerificationReport
 
 
@@ -43,5 +41,6 @@ class MinariState(BaseModel):
     diagnosis: Diagnosis | None = None
     fixes: FixCandidates | None = None
     verification: VerificationReport | None = None    
+    merge: MergeReport | None = None
     status: str = "running"
     error: str | None = None

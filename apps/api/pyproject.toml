@@ -49,6 +49,9 @@ ignore = ["S101"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S"]
+# The MR body is rendered markdown — its lines are content, not code. Wrapping
+# them would inject newlines into the published merge request, so E501 is N/A.
+"app/services/delivery/mr_description.py" = ["E501"]
 
 [tool.mypy]
 python_version = "3.12"
