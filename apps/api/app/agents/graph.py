@@ -8,6 +8,7 @@ from app.agents.nodes.detective import detective_node
 from app.agents.nodes.fixer import fixer_node
 from app.agents.nodes.merger import merger_node
 from app.agents.nodes.validator import validator_node
+from app.agents.resilience import resilient_node
 from app.agents.state import MinariState
 
 
@@ -36,10 +37,10 @@ def _after_validator(state: MinariState) -> str:
 
 def build_graph():
     g = StateGraph(MinariState)
-    g.add_node("detective", detective_node)
-    g.add_node("fixer", fixer_node)
-    g.add_node("validator", validator_node)
-    g.add_node("merger", merger_node)
+    g.add_node("detective", resilient_node("detect")(detective_node))
+    g.add_node("fixer", resilient_node("fix")(fixer_node))
+    g.add_node("validator", resilient_node("verify")(validator_node))
+    g.add_node("merger", resilient_node("deliver")(merger_node))
     g.add_edge(START, "detective")
     g.add_conditional_edges("detective", _after_detective, {"fixer": "fixer", END: END})
     g.add_conditional_edges("fixer", _after_fixer, {"validator": "validator", END: END})

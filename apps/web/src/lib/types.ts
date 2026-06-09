@@ -65,3 +65,71 @@ export type FixStreamEvent = {
 
 
 export type AnyStreamEvent = ReasoningEvent | FixStreamEvent;
+
+
+
+
+
+
+
+export interface DashboardSummary {
+  tests_fixed: number;
+  fixed_this_week: number;
+  success_rate: number;        
+  flakiness_rate: number;     
+  avg_fix_latency_ms: number;
+  verifications_total: number;
+}
+
+export interface TrendPoint {
+  day: string;                
+  flakiness_rate: number;     
+  runs: number;
+}
+
+
+export interface RootCauseSlice {
+  category: RootCause;
+  count: number;
+}
+
+
+export interface ActivityItem {
+  test_name: string;
+  file_path: string;
+  category: RootCause | null;
+  confidence: number | null;
+  mr_iid: number | null;
+  mr_url: string | null;
+  created_at: string;
+}
+
+
+
+
+export type RiskTier = "low" | "elevated" | "high";
+export type ForecastTrend = "improving" | "stable" | "worsening";
+
+
+
+export interface ForecastItem {
+  test_name: string;
+  file_path: string;
+  predicted_flakiness: number;  
+  risk_tier: RiskTier;
+  trend: ForecastTrend;
+  confidence: number;          
+  drivers: string[];
+  horizon_days: number;
+}
+
+
+export interface CarbonReport {
+  runs_avoided: number;
+  ci_minutes_avoided: number;
+  energy_kwh: number;
+  co2_grams: number;
+  engineer_hours_saved: number;
+  grid_intensity_g_kwh: number;
+  runner_power_kw: number;
+}

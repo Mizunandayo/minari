@@ -10,6 +10,7 @@ from sse_starlette.sse import EventSourceResponse
 from app.agents.events import RUNS, DoneEvent, ErrorEvent, EventBus
 from app.agents.graph import GRAPH
 from app.agents.state import MinariState
+from app.core.config import get_settings
 from app.core.logging import get_logger
 from app.core.rate_limit import DIAGNOSIS_LIMIT, limiter
 from app.core.security import mint_stream_token, require_api_key, verify_stream_token
@@ -85,6 +86,11 @@ async def _run_pipeline(state: MinariState, bus: EventBus) -> None:
              dependencies=[Depends(require_api_key)])
 @limiter.limit(DIAGNOSIS_LIMIT)
 async def trigger_diagnosis(request: Request, body: DiagnoseRequest) -> DiagnoseAccepted:
+    # Front-door guard: never spin up the pipeline on a project we don't recognize.
+    s = get_settings()
+    if body.project_id not in (set(s.allowed_project_ids) | {s.demo_project_id}):
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "Unknown project_id.")
+
     run_id = str(uuid.uuid4())
     bus = EventBus()
     RUNS[run_id] = bus

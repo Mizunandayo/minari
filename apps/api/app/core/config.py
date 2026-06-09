@@ -76,6 +76,19 @@ class Settings(BaseSettings):
     default_reviewer_id: int | None = None  
     auto_merge: bool = False     
 
+    # MCP SERVER
+    mcp_server_name: str = "minari"
+    mcp_allow_writes: bool = False
+
+    # FORECASTING
+    forecast_horizon_days: int = 7
+    forecast_min_runs: int = 8
+
+    # SUSTAINABILITY
+    carbon_ci_minutes_per_run: float = 4.0   
+    carbon_runner_power_kw: float = 0.30   
+    carbon_grid_intensity_g_kwh: float = 480.0 
+    carbon_engineer_minutes_per_run: float = 6.0  
 
     # OBSERVABILITY
     langfuse_public_key: SecretStr | None = None

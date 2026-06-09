@@ -1,10 +1,10 @@
 """Dashboard read models — aggregates surfaced to the web client."""
 
 from __future__ import annotations
+
 from pydantic import BaseModel, Field
+
 from app.schemas.diagnosis import RootCause  # reuse the canonical 5-category enum
-
-
 
 
 class DashboardSummary(BaseModel):

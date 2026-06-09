@@ -12,14 +12,6 @@ import { FlakinessTrend } from "@/components/charts/FlakinessTrend";
 import { RootCauseDonut } from "@/components/charts/RootCauseDonut";
 import { TestList } from "@/components/tests/TestList";
 import type { RootCauseSlice, TestListItem, TrendPoint } from "@/lib/types";
-import { ForecastPanel } from "@/components/dashboard/ForecastPanel";
-import { SustainabilityCard } from "@/components/dashboard/SustainabilityCard";
-
-
-
-
-
-
 
 
 
@@ -41,10 +33,8 @@ export default async function DashboardPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-5 py-10 sm:px-6 sm:py-12">
-      <Link
-        href="/"
-        className="mb-8 inline-flex items-center gap-2 text-[0.9375rem] font-semibold text-white/[0.78] transition-colors hover:text-white"
-      >
+      <Link href="/"
+        className="mb-8 inline-flex items-center gap-2 text-[0.9375rem] font-semibold text-white/[0.78] transition-colors hover:text-white">
         <ArrowLeft size={18} strokeWidth={2.2} aria-hidden />
         Back to overview
       </Link>
@@ -78,31 +68,13 @@ export default async function DashboardPage() {
       </div>
 
       <section className="mb-12">
-        <SectionHeading
-          title="Predictive Forecast"
-          hint="Where each test is heading — projected flaky-run probability for the next 7 days."
-        />
-        <ForecastPanel />
-      </section>
-
-      <section className="mb-12">
         <SectionHeading title="Recent Activity" hint="The last ten delivered merge requests" />
         <ActivityFeed />
       </section>
 
       <section className="mb-12">
-        <SectionHeading
-          title="Sustainability Impact"
-          hint="Compute and engineer time Minari has reclaimed by ending flaky re-run loops."
-        />
-        <SustainabilityCard />
-      </section>
-
-      <section className="mb-12">
-        <SectionHeading
-          title="How Minari Compares"
-          hint="Every competitor stops at detection. Minari completes all five stages."
-        />
+        <SectionHeading title="How Minari Compares"
+          hint="Every competitor stops at detection. Minari completes all five stages." />
         <CompetitorMatrix />
       </section>
 

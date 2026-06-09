@@ -1,4 +1,7 @@
-import type { DiagnoseAccepted, TestListItem } from "./types";
+import type {
+  ActivityItem, DashboardSummary, DiagnoseAccepted, RootCauseSlice,
+  TestListItem, TrendPoint, CarbonReport, ForecastItem,
+} from "./types";
 
 const BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
 const KEY = process.env.NEXT_PUBLIC_DEMO_API_KEY ?? "";
@@ -50,3 +53,30 @@ export async function startDiagnosis(input: {
 export function streamUrl(streamPath: string, token: string): string {
   return `${BASE}${streamPath}?token=${encodeURIComponent(token)}`;
 }
+
+
+
+
+// One helper for the api-key + envelope dance shared by every dashboard read.
+async function getJson<T>(path: string): Promise<T> {
+  const res = await fetch(`${BASE}${path}`, {
+    headers: { "X-API-Key": KEY },
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(`${path} ${res.status}`);
+  const body = await res.json();
+  return body.data as T;
+}
+
+export const getDashboardSummary = () =>
+  getJson<DashboardSummary>("/api/v1/dashboard/summary");
+export const getDashboardTrends = () =>
+  getJson<TrendPoint[]>("/api/v1/dashboard/trends");
+export const getDashboardRootCauses = () =>
+  getJson<RootCauseSlice[]>("/api/v1/dashboard/root-causes");
+export const getDashboardActivity = () =>
+  getJson<ActivityItem[]>("/api/v1/dashboard/activity");
+export const getDashboardForecast = () =>
+  getJson<ForecastItem[]>("/api/v1/dashboard/forecast");
+export const getDashboardSustainability = () =>
+  getJson<CarbonReport>("/api/v1/dashboard/sustainability");

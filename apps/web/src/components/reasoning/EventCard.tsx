@@ -33,7 +33,9 @@ function body(e: ReasoningEvent): string {
                             + ` · ${e.duration_ms.toFixed(0)}ms`
                             + (e.run_index === e.total_runs
                                 ? ` · gate ${e.gate_passed ? "PASSED" : "FAILED"}`
-                                  + ` · variance −${(e.variance_reduction_pct * 100).toFixed(0)}%`
+                                  + (e.variance_reduction_pct > 0
+                                      ? ` · variance −${(e.variance_reduction_pct * 100).toFixed(0)}%`
+                                      : " · no pre-fix variance baseline")
                                 : "");
     case "heal":       return `Attempt ${e.attempt}: ${e.reason}`;
     case "merge":      return e.mr_iid !== null

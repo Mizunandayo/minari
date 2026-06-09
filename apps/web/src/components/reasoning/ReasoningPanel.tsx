@@ -11,7 +11,7 @@ import { FixCandidateList } from "@/components/fixes/FixCandidateList";
 import { StageTracker } from "@/components/delivery/StageTracker";
 import { ConfidenceCascade } from "@/components/delivery/ConfidenceCascade";
 import { MergeRequestCard } from "@/components/delivery/MergeRequestCard";
-
+import { PanelStats } from "./PanelStats";
 
 
 
@@ -48,6 +48,7 @@ export function ReasoningPanel({ projectId, filePath, testName }: {
             {running ? "Pause" : "Run diagnosis"}
           </Button>
         </header>
+        <PanelStats events={events} running={running} />
         <div ref={scrollRef} className="max-h-[28rem] overflow-y-auto px-5 py-3">
           {events.length === 0 && (
             <p className="py-10 text-center text-[0.9375rem] text-white/[0.78]">
