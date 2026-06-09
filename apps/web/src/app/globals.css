@@ -67,3 +67,100 @@ button, a, [role="button"] {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ============================================================
+   Landing page — ported from the Mirai design language,
+   re-themed onto Minari's Mi-series tokens (no gray, Poppins).
+   ============================================================ */
+
+html { scroll-behavior: smooth; }
+
+/* Fine film grain so the near-black never reads flat (fixed, never scrolls) */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.02;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Scroll-reveal — driven by useScrollReveal adding .visible */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+}
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-d1 { transition-delay: 80ms; }
+.reveal-d2 { transition-delay: 160ms; }
+.reveal-d3 { transition-delay: 240ms; }
+.reveal-d4 { transition-delay: 320ms; }
+.reveal-d5 { transition-delay: 400ms; }
+
+/* Glass surfaces */
+.nav-glass {
+  background: rgba(5, 5, 5, 0.72);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+}
+.glass-panel {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--color-line);
+  backdrop-filter: blur(16px) saturate(130%);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
+}
+
+/* Hero entrance + badge dot */
+@keyframes heroUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-enter { animation: heroUp 1s var(--ease-out) both; }
+
+@keyframes pulseDot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+.badge-dot { animation: pulseDot 2.2s ease-in-out infinite; }
+
+/* Pipeline flow lane */
+@keyframes flowPulse {
+  0%   { left: -8%; opacity: 0; }
+  14%  { opacity: 1; }
+  86%  { opacity: 1; }
+  100% { left: 102%; opacity: 0; }
+}
+.flow-lane {
+  position: relative;
+  height: 2px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.4), rgba(255,255,255,0.06));
+}
+.flow-pulse {
+  position: absolute;
+  top: 50%;
+  width: 72px;
+  height: 8px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.22) 65%, transparent 100%);
+  transform: translateY(-50%);
+  animation: flowPulse 3.2s linear infinite;
+}
+.flow-pulse.d1 { animation-delay: 0.85s; }
+.flow-pulse.d2 { animation-delay: 1.7s; }
+
+/* Pipeline node states (driven in JS) */
+.pipe-active {
+  border-color: rgba(255, 255, 255, 0.9) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.26), 0 0 64px rgba(255, 255, 255, 0.07) !important;
+}
+.pipe-passed {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+/* Slim scrollbar to match the dark shell */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.14); border-radius: 99px; }

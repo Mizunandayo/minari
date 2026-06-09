@@ -1,36 +1,40 @@
-import Link from "next/link";
-import { MetricGrid } from "@/components/ui/MetricGrid";
-import { Button } from "@/components/ui/Button";
-import { Activity, ArrowRight } from "lucide-react";
+import { LandingNav } from "@/components/landing/LandingNav";
+import { Hero } from "@/components/landing/Hero";
+import { Problem } from "@/components/landing/Problem";
+import { Workflow } from "@/components/landing/Workflow";
+import { GeminiLayer } from "@/components/landing/GeminiLayer";
+import { Architecture } from "@/components/landing/Architecture";
+import { Features } from "@/components/landing/Features";
+import { TechStack } from "@/components/landing/TechStack";
+import { Market } from "@/components/landing/Market";
+import { Revenue } from "@/components/landing/Revenue";
+import { WhyMinari } from "@/components/landing/WhyMinari";
+import { Roadmap } from "@/components/landing/Roadmap";
+import { Demo } from "@/components/landing/Demo";
+import { CTA } from "@/components/landing/CTA";
 
+// Marketing landing — composed from focused section components (each isolated and
+// independently editable). The page stays a server component; interactive leaves
+// (nav scroll-spy, starfield, animated pipeline, scroll-reveal) opt into "use client".
 export default function Home() {
   return (
-    <main className="mx-auto max-w-6xl px-6 py-16">
-      <header className="mb-12">
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-1.5 text-[0.875rem] font-medium text-white/[0.78]">
-          <Activity size={16} strokeWidth={2.2} aria-hidden />
-          GitLab Track · Rapid Agent Hackathon 2026
-        </div>
-        <h1 className="text-5xl font-bold leading-tight tracking-tight text-white">
-          Minari<span className="ml-3 align-middle text-2xl font-medium text-white/[0.78]">実成</span>
-        </h1>
-        <p className="mt-4 max-w-2xl text-lg font-normal text-white/[0.92]">
-          Autonomous flaky-test intelligence. Detect, diagnose, fix, verify, and deliver —
-          end to end through GitLab MCP, in under two minutes.
-        </p>
-        <div className="mt-8 flex flex-wrap gap-4">
-          <Link
-            href="/dashboard"
-            aria-label="Open the live diagnosis dashboard"
-            className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-white px-5 py-3 text-base font-semibold text-black transition-[transform,background] duration-200 ease-out hover:-translate-y-0.5 hover:bg-white/90 focus-visible:outline-none"
-          >
-            Watch a live diagnosis
-            <ArrowRight size={18} strokeWidth={2.4} aria-hidden />
-          </Link>
-          <Button variant="ghost" aria-label="Open competitor comparison">Compare vs. Datadog</Button>
-        </div>
-      </header>
-      <MetricGrid />
-    </main>
+    <>
+      <LandingNav />
+      <main>
+        <Hero />
+        <Problem />
+        <Workflow />
+        <GeminiLayer />
+        <Architecture />
+        <Features />
+        <TechStack />
+        <Market />
+        <Revenue />
+        <WhyMinari />
+        <Roadmap />
+        <Demo />
+        <CTA />
+      </main>
+    </>
   );
 }
