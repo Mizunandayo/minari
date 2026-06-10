@@ -17,21 +17,24 @@ export default async function TestDetailPage({
 
   if (!test) {
     return (
-      <main className="mx-auto max-w-5xl px-6 py-12">
-        <Link
-          href="/dashboard"
-          className="mb-8 inline-flex items-center gap-2 text-[0.9375rem] font-semibold text-white/[0.78] transition-colors hover:text-white"
-        >
-          <ArrowLeft size={18} strokeWidth={2.2} aria-hidden />
-          Back to tests
-        </Link>
-        <p className="text-lg font-semibold text-white">Test not found.</p>
+      <main className="min-h-screen bg-[#050505] px-6 py-12">
+        <div className="mx-auto max-w-5xl">
+          <Link
+            href="/dashboard"
+            className="mb-8 inline-flex items-center gap-2 text-[0.9375rem] font-semibold text-white/[0.78] transition-colors hover:text-white"
+          >
+            <ArrowLeft size={18} strokeWidth={2.2} aria-hidden />
+            Back to tests
+          </Link>
+          <p className="text-lg font-semibold text-white">Test not found.</p>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-12">
+    <main className="min-h-screen bg-[#050505]">
+      <div className="mx-auto max-w-5xl px-6 py-12">
       <Link
         href="/dashboard"
         className="mb-8 inline-flex items-center gap-2 text-[0.9375rem] font-semibold text-white/[0.78] transition-colors hover:text-white"
@@ -52,6 +55,7 @@ export default async function TestDetailPage({
           filePath={test.file_path}
           testName={test.test_name}
         />
+      </div>
       </div>
     </main>
   );

@@ -31,24 +31,26 @@ export function MergeRequestCard({ events }: { events: ReasoningEvent[] }) {
         Minari opened <span className="font-semibold text-white">!{merge.mr_iid}</span> with the
         verified fix, the full diagnosis, and the 5-run verification report attached.
       </p>
-      {merge.assigned_to && (
-        <p className="mt-2 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-white/[0.92]">
-          <UserCheck size={18} strokeWidth={2.2} style={{ color: "var(--color-pass)" }} aria-hidden />
-          Reviewer: <span className="font-semibold text-white">{merge.assigned_to}</span>
-        </p>
-      )}
-      {merge.mr_url && (
-        <a
-          href={merge.mr_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-4 inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-[0.9375rem] font-semibold text-black transition-transform duration-200 hover:-translate-y-0.5"
-          style={{ background: "var(--color-pass)" }}
-        >
-          Review in GitLab
-          <ExternalLink size={18} strokeWidth={2.4} aria-hidden />
-        </a>
-      )}
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+        {merge.assigned_to && (
+          <p className="inline-flex items-center gap-2 text-[0.9375rem] font-medium text-white/[0.92]">
+            <UserCheck size={18} strokeWidth={2.2} style={{ color: "var(--color-pass)" }} aria-hidden />
+            Reviewer: <span className="font-semibold text-white">{merge.assigned_to}</span>
+          </p>
+        )}
+        {merge.mr_url && (
+          <a
+            href={merge.mr_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-[0.9375rem] font-semibold text-black transition-transform duration-200 hover:-translate-y-0.5"
+            style={{ background: "var(--color-pass)" }}
+          >
+            Review in GitLab
+            <ExternalLink size={18} strokeWidth={2.4} aria-hidden />
+          </a>
+        )}
+      </div>
     </motion.section>
   );
 }

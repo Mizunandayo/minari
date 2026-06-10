@@ -10,7 +10,7 @@ import type { ReasoningEvent } from "@/lib/types";
 const META: Record<ReasoningEvent["type"], { icon: typeof Terminal; label: string; tone: string }> = {
   mcp_call:   { icon: GitBranch,    label: "MCP CALL",   tone: "var(--color-info)" },
   mcp_result: { icon: Database,     label: "MCP RESULT", tone: "var(--color-info)" },
-  reason:     { icon: Brain,        label: "REASON",     tone: "var(--color-text)" },
+  reason:     { icon: Brain,        label: "REASON",     tone: "rgba(255,255,255,0.78)" },
   decide:     { icon: Terminal,     label: "DECIDE",     tone: "var(--color-warn)" },
   verify:     { icon: ShieldCheck,  label: "VERIFY",     tone: "var(--color-pass)" },
   heal:       { icon: Wrench,       label: "SELF-HEAL",  tone: "var(--color-warn)" },

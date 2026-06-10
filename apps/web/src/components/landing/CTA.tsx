@@ -5,6 +5,7 @@ import { Reveal } from "@/hooks/useScrollReveal";
 const FOOTER_LINKS = [
   { label: "Live App", href: "https://minari-eight.vercel.app" },
   { label: "API Health", href: "https://minari-api-1063669194601.asia-northeast1.run.app/api/v1/healthz" },
+  { label: "Source Code", href: "https://github.com/Mizunandayo/minari" },
   { label: "Demo Repo", href: "https://gitlab.com/francisdanielgenese-group/francisdanielgenese-project" },
 ];
 

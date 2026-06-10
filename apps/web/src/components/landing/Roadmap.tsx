@@ -13,7 +13,7 @@ const PHASES = [
     items: [
       "Five-stage LangGraph pipeline live on Cloud Run + Vercel",
       "Python / pytest with real GitLab CI verification (5× runs)",
-      "Assertion-safety gate + confidence cascade, never auto-merges",
+      "Assertion-safety gate + confidence cascade, never auto-merges (reviewer via blame or config)",
       "Live dashboard, predictive forecast, sustainability tracker",
       "Minari exposed as its own MCP server",
     ],

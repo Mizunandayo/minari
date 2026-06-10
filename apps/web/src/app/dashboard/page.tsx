@@ -40,7 +40,8 @@ export default async function DashboardPage() {
   }
 
   return (
-    <main className="mx-auto max-w-6xl px-5 py-10 sm:px-6 sm:py-12">
+    <main className="min-h-screen bg-[#050505] px-5 py-10 sm:px-6 sm:py-12">
+      <div className="mx-auto max-w-6xl">
       <Link
         href="/"
         className="mb-8 inline-flex items-center gap-2 text-[0.9375rem] font-semibold text-white/[0.78] transition-colors hover:text-white"
@@ -98,18 +99,12 @@ export default async function DashboardPage() {
         <SustainabilityCard />
       </section>
 
-      <section className="mb-12">
-        <SectionHeading
-          title="How Minari Compares"
-          hint="Every competitor stops at detection. Minari completes all five stages."
-        />
-        <CompetitorMatrix />
-      </section>
 
       <section>
         <SectionHeading title="Tracked Tests" hint="Open one to watch a live diagnosis stream." />
         <TestList tests={tests} />
       </section>
+      </div>
     </main>
   );
 }

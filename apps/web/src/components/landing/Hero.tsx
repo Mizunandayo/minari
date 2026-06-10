@@ -122,10 +122,10 @@ export function Hero() {
             <ArrowRight size={18} strokeWidth={2.4} aria-hidden />
           </Link>
           <a
-            href="https://gitlab.com/francisdanielgenese-group/francisdanielgenese-project"
+            href="https://github.com/Mizunandayo/minari"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="View the demo GitLab project"
+            aria-label="View the Minari source on GitHub"
             className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/[0.18] bg-white/[0.04] px-7 py-3.5 text-[0.95rem] font-semibold text-white/[0.92] backdrop-blur transition-colors duration-200 hover:border-white/40 hover:text-white"
           >
             <GitBranch size={17} strokeWidth={2} aria-hidden />

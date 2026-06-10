@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width"/>
+<title>Minari — Pitch Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #050505;
+    --surface: #0d0d0f;
+    --border:  rgba(255,255,255,0.09);
+    --white:   #ffffff;
+    --muted:   #a1a1aa;
+    --dim:     rgba(255,255,255,0.38);
+    --green:   #34d399;
+    --blue:    #60a5fa;
+    --amber:   #fbbf24;
+    --red:     #f87171;
+  }
+
+  @page { size: 1280px 720px; margin: 0; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #181818;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── Slide container ───────────────────────────────────── */
+  .slide {
+    width: 1280px;
+    height: 720px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+    page-break-after: always;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media screen {
+    body { padding: 40px; display: flex; flex-direction: column; gap: 40px; align-items: center; }
+    .slide { border-radius: 16px; box-shadow: 0 32px 80px rgba(0,0,0,0.75); }
+  }
+
+  /* ── Layout helpers ────────────────────────────────────── */
+  .slide-inner { flex: 1; display: flex; flex-direction: column; padding: 52px 68px; position: relative; z-index: 2; }
+  .row { display: flex; align-items: stretch; gap: 32px; flex: 1; }
+  .col { display: flex; flex-direction: column; }
+  .vdiv { width: 1px; background: var(--border); flex-shrink: 0; align-self: stretch; }
+
+  /* ── Typography ────────────────────────────────────────── */
+  .eyebrow {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+  }
+  .h1 { font-size: 3.4rem; font-weight: 900; letter-spacing: -0.04em; line-height: 0.95; color: var(--white); }
+  .h2 { font-size: 2.4rem; font-weight: 800; letter-spacing: -0.035em; line-height: 1.05; color: var(--white); }
+  .lead { font-size: 0.96rem; font-weight: 400; color: var(--muted); line-height: 1.65; }
+
+  /* ── Orb ───────────────────────────────────────────────── */
+  .orb { position: absolute; border-radius: 50%; filter: blur(90px); pointer-events: none; z-index: 0; }
+
+  /* ── Pill badge ────────────────────────────────────────── */
+  .pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 6px 14px; font-size: 0.73rem; font-weight: 600;
+    color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.04);
+  }
+  .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+
+  /* ── Stat bar ──────────────────────────────────────────── */
+  .stat-bar { display: grid; grid-template-columns: repeat(4,1fr); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: rgba(255,255,255,0.025); }
+  .stat-cell { padding: 16px 20px; border-right: 1px solid var(--border); }
+  .stat-cell:last-child { border-right: none; }
+  .stat-num { font-size: 1.55rem; font-weight: 900; letter-spacing: -0.05em; color: var(--white); line-height: 1; }
+  .stat-lbl { font-size: 0.68rem; font-weight: 500; color: var(--muted); margin-top: 4px; }
+
+  /* ── KPI card ──────────────────────────────────────────── */
+  .kpi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 24px; }
+  .kpi-card { padding: 22px 20px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,0.03); display: flex; flex-direction: column; gap: 5px; }
+  .kpi-n { font-size: 2.2rem; font-weight: 900; letter-spacing: -0.06em; line-height: 1; }
+  .kpi-u { font-size: 0.85rem; font-weight: 700; color: var(--muted); }
+  .kpi-t { font-size: 0.82rem; font-weight: 700; color: var(--white); margin-top: 4px; }
+  .kpi-d { font-size: 0.71rem; font-weight: 400; color: var(--muted); line-height: 1.5; }
+
+  /* ── Pipeline ──────────────────────────────────────────── */
+  .pipe { display: flex; align-items: center; gap: 0; margin-top: 28px; }
+  .pipe-step { flex: 1; text-align: center; padding: 14px 6px; border: 1px solid var(--border); border-radius: 10px; background: rgba(255,255,255,0.03); }
+  .pipe-n { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .pipe-name { font-size: 0.86rem; font-weight: 800; color: var(--white); margin-top: 3px; }
+  .pipe-tech { font-size: 0.63rem; font-weight: 500; color: var(--muted); margin-top: 3px; }
+  .pipe-arr { color: var(--muted); padding: 0 5px; font-size: 1rem; flex-shrink: 0; }
+
+  /* ── Comparison table ──────────────────────────────────── */
+  .cmp-table { width: 100%; border-collapse: collapse; font-size: 0.77rem; margin-top: 18px; }
+  .cmp-table th { padding: 8px 11px; text-align: center; font-weight: 700; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); }
+  .cmp-table th.feat-h { text-align: left; }
+  .cmp-table th.hl { color: var(--white); background: rgba(52,211,153,0.08); }
+  .cmp-table td { padding: 9px 11px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--muted); text-align: center; vertical-align: middle; }
+  .cmp-table td.hl { background: rgba(52,211,153,0.05); }
+  .cmp-table td.feat { color: rgba(255,255,255,0.86); font-weight: 500; text-align: left; }
+  .chk { color: var(--green); font-weight: 700; }
+  .crs { color: var(--red); }
+  .prt { color: var(--amber); }
+
+  /* ── Market ────────────────────────────────────────────── */
+  .mkt-row { padding-left: 14px; border-left: 2px solid rgba(255,255,255,0.25); margin-bottom: 18px; }
+  .mkt-row:last-child { margin-bottom: 0; }
+
+  /* ── Feature cards ─────────────────────────────────────── */
+  .feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+  .feat-card { padding: 15px 17px; border-radius: 10px; border: 1px solid var(--border); background: rgba(255,255,255,0.03); }
+  .feat-tag { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; }
+  .feat-title { font-size: 0.86rem; font-weight: 700; color: var(--white); }
+  .feat-sub { font-size: 0.71rem; font-weight: 400; color: var(--muted); line-height: 1.45; margin-top: 3px; }
+
+  /* ── Check list ────────────────────────────────────────── */
+  .check-list { display: flex; flex-direction: column; gap: 9px; margin-top: 16px; }
+  .check-row { display: flex; align-items: center; gap: 9px; font-size: 0.84rem; font-weight: 500; color: rgba(255,255,255,0.88); }
+  .check-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.7rem; font-weight: 900; }
+
+  /* ── Phase card ────────────────────────────────────────── */
+  .phase-card { border-radius: 14px; border: 1px solid var(--border); padding: 20px 22px; flex: 1; }
+  .phase-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px; }
+  .phase-title { font-size: 0.95rem; font-weight: 800; color: var(--white); margin-bottom: 12px; }
+  .phase-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 7px; font-size: 0.75rem; color: rgba(255,255,255,0.82); line-height: 1.4; }
+
+  /* ── Footer ────────────────────────────────────────────── */
+  .slide-footer {
+    height: 42px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 68px;
+    border-top: 1px solid var(--border);
+    font-size: 0.66rem; font-weight: 500; color: var(--muted);
+    z-index: 2; position: relative;
+  }
+  .slide-num { font-weight: 700; color: rgba(255,255,255,0.35); }
+
+  /* ── Grid line bg ──────────────────────────────────────── */
+  .grid-bg {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 72px 72px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 30% 40%, black 20%, transparent 100%);
+    mask-image: radial-gradient(ellipse 70% 60% at 30% 40%, black 20%, transparent 100%);
+  }
+</style>
+</head>
+<body>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 1 — COVER
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="grid-bg"></div>
+  <div class="orb" style="width:640px;height:640px;top:-180px;right:-100px;background:radial-gradient(circle,rgba(52,211,153,0.07) 0%,transparent 70%)"></div>
+  <div class="orb" style="width:400px;height:400px;bottom:-60px;left:-60px;background:radial-gradient(circle,rgba(96,165,250,0.06) 0%,transparent 70%)"></div>
+
+  <div class="slide-inner" style="justify-content:center;gap:26px">
+
+    <div>
+      <div class="pill" style="margin-bottom:28px">
+        <span class="dot"></span>
+        GitLab Track &nbsp;·&nbsp; Rapid Agent Hackathon &nbsp;·&nbsp; Jun 12, 2026
+      </div>
+
+      <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:14px">
+        <span style="font-size:5.4rem;font-weight:900;letter-spacing:-0.05em;color:#fff;line-height:0.9">MINARI</span>
+        <span style="font-size:3.8rem;font-weight:800;letter-spacing:-0.02em;color:rgba(255,255,255,0.22);line-height:0.9">水成り</span>
+      </div>
+
+      <p style="font-size:1.2rem;font-weight:600;color:rgba(255,255,255,0.78);letter-spacing:-0.01em;margin-bottom:8px">
+        Autonomous Flaky-Test Repair Agent
+      </p>
+      <p style="font-size:0.96rem;font-weight:400;color:rgba(255,255,255,0.52);max-width:560px;line-height:1.7">
+        Detects a flaky test, diagnoses the root cause, generates a fix,<br/>
+        proves it green in real CI five times, then opens a reviewed MR.
+      </p>
+    </div>
+
+    <div class="stat-bar" style="max-width:620px">
+      <div class="stat-cell"><div class="stat-num" style="color:var(--green)">5</div><div class="stat-lbl">autonomous stages</div></div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--blue)">&lt;2 min</div><div class="stat-lbl">detect to delivery</div></div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--amber)">5×</div><div class="stat-lbl">CI-verified per fix</div></div>
+      <div class="stat-cell"><div class="stat-num" style="color:var(--red)">0</div><div class="stat-lbl">auto-merges ever</div></div>
+    </div>
+
+    <div style="display:flex;gap:36px;margin-top:4px">
+      <div>
+        <div style="font-size:0.64rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">Developer</div>
+        <div style="font-size:0.88rem;font-weight:600;color:rgba(255,255,255,0.86);margin-top:3px">Francis Daniel &mdash; Mizu</div>
+      </div>
+      <div>
+        <div style="font-size:0.64rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">Track</div>
+        <div style="font-size:0.88rem;font-weight:600;color:rgba(255,255,255,0.86);margin-top:3px">GitLab + MCP</div>
+      </div>
+      <div>
+        <div style="font-size:0.64rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">Live App</div>
+        <div style="font-size:0.88rem;font-weight:600;color:var(--green);margin-top:3px">minari-eight.vercel.app</div>
+      </div>
+      <div>
+        <div style="font-size:0.64rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">Built with</div>
+        <div style="font-size:0.88rem;font-weight:600;color:rgba(255,255,255,0.86);margin-top:3px">Gemini 2.5 · LangGraph · GitLab MCP · Cloud Run</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="slide-footer">
+    <span>Minari &nbsp;·&nbsp; GitLab Rapid Agent Hackathon 2026</span>
+    <span class="slide-num">01 / 07</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 2 — PROBLEM
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="orb" style="width:500px;height:500px;top:-100px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(96,165,250,0.055) 0%,transparent 70%)"></div>
+
+  <div class="slide-inner">
+    <div style="margin-bottom:28px">
+      <div class="eyebrow">Problem Statement</div>
+      <div class="h2" style="max-width:700px">Flaky tests don't fail because the code is wrong.<br/><span style="color:var(--dim)">They fail because timing, ordering, and shared state are unreliable.</span></div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card" style="border-color:rgba(96,165,250,0.25)">
+        <div style="display:flex;align-items:baseline;gap:8px">
+          <span class="kpi-n" style="color:var(--blue)">16%</span>
+          <span class="kpi-u">of all tests</span>
+        </div>
+        <div class="kpi-t">Flakiness is universal at scale</div>
+        <div class="kpi-d">Google measured ~16% of its own test suite as flaky. The best-resourced codebase on earth still has them, and so does yours.</div>
+      </div>
+      <div class="kpi-card" style="border-color:rgba(251,191,36,0.25)">
+        <div style="display:flex;align-items:baseline;gap:8px">
+          <span class="kpi-n" style="color:var(--amber)">5+</span>
+          <span class="kpi-u">hrs / dev / week</span>
+        </div>
+        <div class="kpi-t">Time lost chasing ghosts</div>
+        <div class="kpi-d">Engineers routinely lose hours re-running pipelines and bisecting failures that were never actual bugs in the first place.</div>
+      </div>
+      <div class="kpi-card" style="border-color:rgba(248,113,113,0.25)">
+        <div style="display:flex;align-items:baseline;gap:8px">
+          <span class="kpi-n" style="color:var(--red)">0</span>
+          <span class="kpi-u">trust left</span>
+        </div>
+        <div class="kpi-t">The suite stops meaning anything</div>
+        <div class="kpi-d">After enough false alarms, teams reflexively ignore red &mdash; including the one failure that is a genuine production break.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:auto;padding-top:24px;border-top:1px solid var(--border)">
+      <p style="font-size:0.9rem;font-weight:500;color:rgba(255,255,255,0.56);max-width:800px;line-height:1.7">
+        Most tools can only <em>point at</em> flaky tests. Fixing by hand is slow, and the lazy fix &mdash; weakening the test &mdash; is worse than the flake itself.
+        <strong style="color:rgba(255,255,255,0.8)"> Minari is the only tool that closes the loop: detect, diagnose, fix, verify, and deliver.</strong>
+      </p>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Minari &nbsp;·&nbsp; GitLab Rapid Agent Hackathon 2026</span>
+    <span class="slide-num">02 / 07</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 3 — SOLUTION (PIPELINE)
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="orb" style="width:480px;height:480px;bottom:-80px;right:-40px;background:radial-gradient(circle,rgba(52,211,153,0.07) 0%,transparent 70%)"></div>
+
+  <div class="slide-inner">
+    <div style="margin-bottom:20px">
+      <div class="eyebrow">How It Works</div>
+      <div class="h2">Five stages. One goal.<br/><span style="color:var(--dim)">Verified, human-reviewed fix in under two minutes.</span></div>
+    </div>
+
+    <!-- Pipeline row -->
+    <div class="pipe">
+      <div class="pipe-step" style="border-color:rgba(96,165,250,0.45)">
+        <div class="pipe-n">01</div>
+        <div class="pipe-name" style="color:var(--blue)">Detect</div>
+        <div class="pipe-tech">JUnit / pytest logs</div>
+      </div>
+      <div class="pipe-arr">&#8594;</div>
+      <div class="pipe-step" style="border-color:rgba(96,165,250,0.45)">
+        <div class="pipe-n">02</div>
+        <div class="pipe-name" style="color:var(--blue)">Diagnose</div>
+        <div class="pipe-tech">Gemini 2.5 Pro</div>
+      </div>
+      <div class="pipe-arr">&#8594;</div>
+      <div class="pipe-step" style="border-color:rgba(251,191,36,0.45)">
+        <div class="pipe-n">03</div>
+        <div class="pipe-name" style="color:var(--amber)">Fix</div>
+        <div class="pipe-tech">Gemini 2.5 Flash</div>
+      </div>
+      <div class="pipe-arr">&#8594;</div>
+      <div class="pipe-step" style="border-color:rgba(52,211,153,0.45)">
+        <div class="pipe-n">04</div>
+        <div class="pipe-name" style="color:var(--green)">Verify</div>
+        <div class="pipe-tech">GitLab CI · 5 runs</div>
+      </div>
+      <div class="pipe-arr">&#8594;</div>
+      <div class="pipe-step" style="border-color:rgba(52,211,153,0.45)">
+        <div class="pipe-n">05</div>
+        <div class="pipe-name" style="color:var(--green)">Deliver</div>
+        <div class="pipe-tech">GitLab MR + reviewer</div>
+      </div>
+    </div>
+
+    <!-- Illustrated section: gate checks (left) + 5x CI verify runs (right) -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;flex:1">
+
+      <!-- Left: assertion-safety gate visual -->
+      <div style="border-radius:11px;border:1px solid rgba(251,191,36,0.32);background:rgba(251,191,36,0.04);padding:16px 18px;display:flex;flex-direction:column">
+        <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--amber);margin-bottom:11px">Assertion-safety gate &nbsp;&#183;&nbsp; runs before every MR</div>
+        <div style="display:flex;flex-direction:column;gap:7px;flex:1">
+          <div style="display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.025);border-radius:9px;padding:9px 14px">
+            <span style="width:22px;height:22px;border-radius:50%;background:rgba(52,211,153,0.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--green);font-size:0.72rem;font-weight:900">&#10003;</span>
+            <span style="font-size:0.87rem;font-weight:600;color:#fff;flex:1">Syntax valid</span>
+            <span style="font-family:monospace;font-size:0.65rem;color:var(--muted)">tree-sitter parse</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.025);border-radius:9px;padding:9px 14px">
+            <span style="width:22px;height:22px;border-radius:50%;background:rgba(52,211,153,0.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--green);font-size:0.72rem;font-weight:900">&#10003;</span>
+            <span style="font-size:0.87rem;font-weight:600;color:#fff;flex:1">Assertions preserved</span>
+            <span style="font-family:monospace;font-size:0.65rem;color:var(--muted)">AST walk &nbsp;&#183;&nbsp; original &#8838; fixed</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.025);border-radius:9px;padding:9px 14px">
+            <span style="width:22px;height:22px;border-radius:50%;background:rgba(52,211,153,0.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--green);font-size:0.72rem;font-weight:900">&#10003;</span>
+            <span style="font-size:0.87rem;font-weight:600;color:#fff;flex:1">Assertions unmodified</span>
+            <span style="font-family:monospace;font-size:0.65rem;color:var(--muted)">DB-enforced constraint</span>
+          </div>
+        </div>
+        <!-- Confidence cascade bar -->
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.07)">
+          <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Confidence cascade</div>
+          <div style="display:flex;gap:4px">
+            <div style="flex:1;height:7px;border-radius:999px;background:var(--blue);opacity:0.85" title="Detect"></div>
+            <div style="flex:1;height:7px;border-radius:999px;background:var(--blue);opacity:0.85" title="Diagnose"></div>
+            <div style="flex:1;height:7px;border-radius:999px;background:var(--amber);opacity:0.85" title="Fix"></div>
+            <div style="flex:1;height:7px;border-radius:999px;background:var(--green);opacity:0.85" title="Verify"></div>
+            <div style="flex:1;height:7px;border-radius:999px;background:var(--green);opacity:0.85" title="Deliver"></div>
+          </div>
+          <div style="font-size:0.67rem;font-weight:500;color:var(--muted);margin-top:5px">Run exits early if any stage falls below threshold &mdash; no wasted CI minutes</div>
+        </div>
+      </div>
+
+      <!-- Right: 5x CI verify runs visual -->
+      <div style="border-radius:11px;border:1px solid rgba(52,211,153,0.32);background:rgba(52,211,153,0.04);padding:16px 18px;display:flex;flex-direction:column">
+        <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--green);margin-bottom:11px">Real GitLab CI &nbsp;&#183;&nbsp; 5 isolated runs required</div>
+        <!-- 5 run boxes -->
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px">
+            <div style="width:100%;height:50px;border-radius:8px;background:rgba(52,211,153,0.14);border:1px solid rgba(52,211,153,0.42);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--green);font-weight:900">&#10003;</div>
+            <span style="font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.72)">Run 1</span>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px">
+            <div style="width:100%;height:50px;border-radius:8px;background:rgba(52,211,153,0.14);border:1px solid rgba(52,211,153,0.42);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--green);font-weight:900">&#10003;</div>
+            <span style="font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.72)">Run 2</span>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px">
+            <div style="width:100%;height:50px;border-radius:8px;background:rgba(52,211,153,0.14);border:1px solid rgba(52,211,153,0.42);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--green);font-weight:900">&#10003;</div>
+            <span style="font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.72)">Run 3</span>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px">
+            <div style="width:100%;height:50px;border-radius:8px;background:rgba(52,211,153,0.14);border:1px solid rgba(52,211,153,0.42);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--green);font-weight:900">&#10003;</div>
+            <span style="font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.72)">Run 4</span>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:7px">
+            <div style="width:100%;height:50px;border-radius:8px;background:rgba(52,211,153,0.14);border:1px solid rgba(52,211,153,0.42);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--green);font-weight:900">&#10003;</div>
+            <span style="font-size:0.65rem;font-weight:600;color:rgba(255,255,255,0.72)">Run 5</span>
+          </div>
+        </div>
+        <!-- Variance reduction bar -->
+        <div style="margin-bottom:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+            <span style="font-size:0.75rem;font-weight:600;color:rgba(255,255,255,0.72)">Variance reduction</span>
+            <span style="font-size:0.75rem;font-weight:700;color:var(--green)">&#8595; 87%</span>
+          </div>
+          <div style="height:7px;background:rgba(255,255,255,0.07);border-radius:999px;overflow:hidden">
+            <div style="height:100%;width:87%;background:var(--green);border-radius:999px"></div>
+          </div>
+        </div>
+        <!-- Overall confidence -->
+        <div style="display:flex;align-items:baseline;gap:8px;margin-top:auto">
+          <span style="font-size:2.2rem;font-weight:900;letter-spacing:-0.06em;color:var(--white);line-height:1">92%</span>
+          <span style="font-size:0.78rem;font-weight:500;color:rgba(255,255,255,0.65)">overall confidence</span>
+        </div>
+        <div style="margin-top:8px;font-size:0.7rem;color:var(--muted);line-height:1.45">Mock or synthetic results never accepted &mdash; only live GitLab CI counts.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Minari &nbsp;·&nbsp; GitLab Rapid Agent Hackathon 2026</span>
+    <span class="slide-num">03 / 07</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 4 — WHY MINARI / COMPETITOR MATRIX
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="orb" style="width:440px;height:440px;top:-80px;right:60px;background:radial-gradient(circle,rgba(52,211,153,0.06) 0%,transparent 70%)"></div>
+
+  <div class="slide-inner">
+    <div style="margin-bottom:18px">
+      <div class="eyebrow">Why Minari</div>
+      <div class="h2" style="font-size:2.1rem">Others detect. Minari completes the loop.<br/><span style="color:var(--dim);font-size:1.5rem">The only tool that verifies and opens a reviewed MR.</span></div>
+    </div>
+
+    <div class="row" style="gap:44px;flex:1">
+      <!-- Table -->
+      <div style="flex:1;overflow:hidden">
+        <table class="cmp-table">
+          <thead>
+            <tr>
+              <th class="feat-h" style="width:36%">Capability</th>
+              <th>Datadog</th>
+              <th>BuildPulse</th>
+              <th>Trunk</th>
+              <th>Launchable</th>
+              <th>Qodo</th>
+              <th class="hl">Minari</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="feat">Detect flaky tests</td>
+              <td><span class="chk">&#10003;</span></td>
+              <td><span class="chk">&#10003;</span></td>
+              <td><span class="chk">&#10003;</span></td>
+              <td><span class="chk">&#10003;</span></td>
+              <td><span class="prt">~</span></td>
+              <td class="hl"><span class="chk">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td class="feat">Diagnose root cause</td>
+              <td><span class="prt">~</span></td>
+              <td><span class="crs">&#10007;</span></td>
+              <td><span class="crs">&#10007;</span></td>
+              <td><span class="crs">&#10007;</span></td>
+              <td><span class="prt">~</span></td>
+              <td class="hl"><span class="chk">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td class="feat">Generate fix</td>
+              <td><span class="crs">&#10007;</span></td>
+              <td><span class="crs">&#10007;</span></td>
+              <td><span class="crs">&#10007;</span></td>
+              <td><span class="crs">&#10007;</span></td>
+              <td><span class="prt">~</span></td>
+              <td class="hl"><span class="chk">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td class="feat" style="font-weight:700;color:#fff">Verify fix in real CI</td>
+              <td><span class="crs">&#10007;</span></td>
+              <td><span class="crs">&#10007;</span></td>
+              <td><span class="crs">&#10007;</span></td>
+              <td><span class="crs">&#10007;</span></td>
+              <td><span class="crs">&#10007;</span></td>
+              <td class="hl" style="font-weight:900;color:var(--green)">&#10003;</td>
+            </tr>
+            <tr>
+              <td class="feat" style="font-weight:700;color:#fff">Create merge request</td>
+              <td><span class="crs">&#10007;</span></td>
+              <td><span class="crs">&#10007;</span></td>
+              <td><span class="crs">&#10007;</span></td>
+              <td><span class="crs">&#10007;</span></td>
+              <td><span class="crs">&#10007;</span></td>
+              <td class="hl" style="font-weight:900;color:var(--green)">&#10003;</td>
+            </tr>
+            <tr>
+              <td class="feat">Free / open-core</td>
+              <td><span class="crs">&#10007;</span></td>
+              <td><span class="prt">~</span></td>
+              <td><span class="prt">~</span></td>
+              <td><span class="crs">&#10007;</span></td>
+              <td><span class="prt">~</span></td>
+              <td class="hl"><span class="chk">&#10003;</span></td>
+            </tr>
+            <tr>
+              <td class="feat">GitLab-native</td>
+              <td><span class="prt">~</span></td>
+              <td><span class="prt">~</span></td>
+              <td><span class="prt">~</span></td>
+              <td><span class="prt">~</span></td>
+              <td><span class="crs">&#10007;</span></td>
+              <td class="hl"><span class="chk">&#10003;</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="display:flex;gap:18px;margin-top:12px">
+          <span style="display:flex;align-items:center;gap:6px;font-size:0.74rem;font-weight:500;color:rgba(255,255,255,0.72)">
+            <span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block"></span>Does it
+          </span>
+          <span style="display:flex;align-items:center;gap:6px;font-size:0.74rem;font-weight:500;color:rgba(255,255,255,0.72)">
+            <span style="width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block"></span>Partial
+          </span>
+          <span style="display:flex;align-items:center;gap:6px;font-size:0.74rem;font-weight:500;color:rgba(255,255,255,0.72)">
+            <span style="width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block"></span>No
+          </span>
+          <span style="font-size:0.68rem;color:var(--muted);margin-left:auto;align-self:center">Positioning reflects each product's publicly documented scope as of 2026.</span>
+        </div>
+      </div>
+
+      <div class="vdiv"></div>
+
+      <!-- Right: moat callouts -->
+      <div style="flex:0 0 260px;display:flex;flex-direction:column;gap:11px;justify-content:center">
+        <div style="padding:16px 18px;border-radius:11px;border:1px solid rgba(52,211,153,0.35);background:rgba(52,211,153,0.06)">
+          <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--green);margin-bottom:5px">Hard to copy</div>
+          <div style="font-size:2.4rem;font-weight:900;letter-spacing:-0.07em;color:var(--green);line-height:1">5/5</div>
+          <div style="font-size:0.74rem;font-weight:600;color:rgba(255,255,255,0.7);margin-top:4px">CI runs required to ship a fix. Real proof, not synthetic.</div>
+        </div>
+        <div style="padding:16px 18px;border-radius:11px;border:1px solid rgba(96,165,250,0.3);background:rgba(96,165,250,0.05)">
+          <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--blue);margin-bottom:5px">Flywheel</div>
+          <div style="font-size:1.05rem;font-weight:800;color:var(--white);line-height:1.2">pgvector diagnosis store</div>
+          <div style="font-size:0.74rem;font-weight:500;color:rgba(255,255,255,0.6);margin-top:5px;line-height:1.5">Every diagnosis enriches the HNSW similarity store. Accuracy compounds with usage.</div>
+        </div>
+        <div style="padding:16px 18px;border-radius:11px;border:1px solid rgba(251,191,36,0.3);background:rgba(251,191,36,0.05)">
+          <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--amber);margin-bottom:5px">MCP moat</div>
+          <div style="font-size:1.05rem;font-weight:800;color:var(--white);line-height:1.2">Minari as a tool server</div>
+          <div style="font-size:0.74rem;font-weight:500;color:rgba(255,255,255,0.6);margin-top:5px;line-height:1.5">Exposes detect, diagnose, fix and verify as MCP tools. Other agents call Minari directly.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Minari &nbsp;·&nbsp; GitLab Rapid Agent Hackathon 2026</span>
+    <span class="slide-num">04 / 07</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 5 — ARCHITECTURE & TECH STACK
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="orb" style="width:460px;height:460px;bottom:-100px;left:40%;background:radial-gradient(circle,rgba(52,211,153,0.05) 0%,transparent 70%)"></div>
+
+  <div class="slide-inner">
+    <div style="margin-bottom:18px">
+      <div class="eyebrow">Architecture</div>
+      <div class="h2" style="font-size:2.0rem">Cloud-native. Stateless agents. Resilient by design.<br/><span style="color:var(--dim);font-size:1.4rem">FastAPI on Cloud Run (Tokyo) · Next.js on Vercel · Upstash Redis</span></div>
+    </div>
+
+    <div class="row" style="gap:40px">
+
+      <!-- System layers -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:9px">
+
+        <!-- Interface layer -->
+        <div style="border-radius:11px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.03);padding:13px 18px;display:flex;align-items:center;gap:14px">
+          <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);width:68px;flex-shrink:0">Interface</div>
+          <div style="font-size:0.88rem;font-weight:700;color:var(--white)">Next.js dashboard &nbsp;·&nbsp; live SSE stream</div>
+          <div style="margin-left:auto;font-size:0.68rem;color:var(--muted)">Vercel</div>
+        </div>
+
+        <!-- Auth -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:4px 0">
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+          <span style="font-size:0.66rem;font-weight:600;color:var(--muted);white-space:nowrap;border:1px solid var(--border);border-radius:999px;padding:3px 12px;background:rgba(255,255,255,0.02)">SSE / HTTPS &nbsp;·&nbsp; API-key + HMAC auth</span>
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+        </div>
+
+        <!-- Agent core -->
+        <div style="border-radius:11px;border:1px solid rgba(52,211,153,0.28);background:rgba(52,211,153,0.05);padding:14px 18px">
+          <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--green);margin-bottom:9px">Agent Core &nbsp;·&nbsp; FastAPI + LangGraph &nbsp;·&nbsp; Cloud Run (Tokyo)</div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="border:1px solid rgba(96,165,250,0.4);border-radius:8px;padding:7px 12px;font-size:0.8rem;font-weight:700;color:#fff;background:rgba(96,165,250,0.08)">Detect</span>
+            <span style="color:var(--muted);font-size:0.9rem">&#8594;</span>
+            <span style="border:1px solid rgba(96,165,250,0.4);border-radius:8px;padding:7px 12px;font-size:0.8rem;font-weight:700;color:#fff;background:rgba(96,165,250,0.08)">Diagnose</span>
+            <span style="color:var(--muted);font-size:0.9rem">&#8594;</span>
+            <span style="border:1px solid rgba(251,191,36,0.4);border-radius:8px;padding:7px 12px;font-size:0.8rem;font-weight:700;color:#fff;background:rgba(251,191,36,0.08)">Fix</span>
+            <span style="color:var(--muted);font-size:0.9rem">&#8594;</span>
+            <span style="border:1px solid rgba(52,211,153,0.4);border-radius:8px;padding:7px 12px;font-size:0.8rem;font-weight:700;color:#fff;background:rgba(52,211,153,0.08)">Verify</span>
+            <span style="color:var(--muted);font-size:0.9rem">&#8594;</span>
+            <span style="border:1px solid rgba(52,211,153,0.4);border-radius:8px;padding:7px 12px;font-size:0.8rem;font-weight:700;color:#fff;background:rgba(52,211,153,0.08)">Deliver</span>
+          </div>
+        </div>
+
+        <!-- Bottom connector -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:4px 0">
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+          <span style="font-size:0.66rem;font-weight:600;color:var(--muted);white-space:nowrap;border:1px solid var(--border);border-radius:999px;padding:3px 12px;background:rgba(255,255,255,0.02)">MCP · REST · Postgres wire</span>
+          <div style="flex:1;height:1px;background:var(--border)"></div>
+        </div>
+
+        <!-- Services row -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+          <div style="border-radius:9px;border:1px solid var(--border);background:rgba(255,255,255,0.025);padding:11px 13px;text-align:center">
+            <div style="font-size:0.78rem;font-weight:700;color:var(--white)">GitLab MCP</div>
+            <div style="font-size:0.63rem;color:var(--muted);margin-top:2px">Code · CI · MRs</div>
+          </div>
+          <div style="border-radius:9px;border:1px solid var(--border);background:rgba(255,255,255,0.025);padding:11px 13px;text-align:center">
+            <div style="font-size:0.78rem;font-weight:700;color:var(--white)">Gemini 2.5</div>
+            <div style="font-size:0.63rem;color:var(--muted);margin-top:2px">Pro + Flash + Embed</div>
+          </div>
+          <div style="border-radius:9px;border:1px solid var(--border);background:rgba(255,255,255,0.025);padding:11px 13px;text-align:center">
+            <div style="font-size:0.78rem;font-weight:700;color:var(--white)">Supabase</div>
+            <div style="font-size:0.63rem;color:var(--muted);margin-top:2px">Postgres + pgvector</div>
+          </div>
+          <div style="border-radius:9px;border:1px solid var(--border);background:rgba(255,255,255,0.025);padding:11px 13px;text-align:center">
+            <div style="font-size:0.78rem;font-weight:700;color:var(--white)">Upstash Redis</div>
+            <div style="font-size:0.63rem;color:var(--muted);margin-top:2px">Shared rate limits</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vdiv"></div>
+
+      <!-- Tech highlights -->
+      <div style="flex:0 0 270px;display:flex;flex-direction:column;gap:10px;justify-content:center">
+        <div style="font-size:0.64rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Key technical decisions</div>
+
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <span style="width:26px;height:26px;border-radius:8px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.8rem;color:var(--green);font-weight:900">&#10003;</span>
+          <div>
+            <div style="font-size:0.82rem;font-weight:700;color:var(--white)">tree-sitter AST gate</div>
+            <div style="font-size:0.7rem;color:var(--muted);line-height:1.4;margin-top:2px">Parse before any fix is accepted. Syntax errors are rejected at the source.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <span style="width:26px;height:26px;border-radius:8px;background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.8rem;color:var(--blue);font-weight:900">&#10003;</span>
+          <div>
+            <div style="font-size:0.82rem;font-weight:700;color:var(--white)">HNSW vector search</div>
+            <div style="font-size:0.7rem;color:var(--muted);line-height:1.4;margin-top:2px">768-d Gemini embeddings over past diagnoses. Recall similar failures instantly.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <span style="width:26px;height:26px;border-radius:8px;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.8rem;color:var(--amber);font-weight:900">&#10003;</span>
+          <div>
+            <div style="font-size:0.82rem;font-weight:700;color:var(--white)">Stateless + scalable</div>
+            <div style="font-size:0.7rem;color:var(--muted);line-height:1.4;margin-top:2px">Each run is independent. Cloud Run scales horizontally; Redis holds shared limits.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <span style="width:26px;height:26px;border-radius:8px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.8rem;color:var(--green);font-weight:900">&#10003;</span>
+          <div>
+            <div style="font-size:0.82rem;font-weight:700;color:var(--white)">defusedxml + HMAC auth</div>
+            <div style="font-size:0.7rem;color:var(--muted);line-height:1.4;margin-top:2px">XXE-hardened JUnit parsing. All inbound API calls verified with HMAC signatures.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <span style="width:26px;height:26px;border-radius:8px;background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.8rem;color:var(--blue);font-weight:900">&#10003;</span>
+          <div>
+            <div style="font-size:0.82rem;font-weight:700;color:var(--white)">Live SSE dashboard</div>
+            <div style="font-size:0.7rem;color:var(--muted);line-height:1.4;margin-top:2px">sse-starlette streams each agent stage live. Observers watch the AI reason in real time.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Minari &nbsp;·&nbsp; GitLab Rapid Agent Hackathon 2026</span>
+    <span class="slide-num">05 / 07</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 6 — MARKET + REVENUE
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="orb" style="width:500px;height:500px;top:-120px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(251,191,36,0.055) 0%,transparent 70%)"></div>
+
+  <div class="slide-inner">
+    <div style="margin-bottom:18px">
+      <div class="eyebrow">Market &amp; Business Model</div>
+      <div class="h2" style="font-size:2.0rem">Every team with CI has flaky tests.<br/><span style="color:var(--dim);font-size:1.4rem">Three revenue streams. Priced on value, not promises.</span></div>
+    </div>
+
+    <div class="row" style="gap:40px">
+
+      <!-- Market pyramid illustration -->
+      <div style="flex:0 0 300px;display:flex;align-items:center;justify-content:center">
+        <div style="position:relative;width:272px;height:258px">
+
+          <!-- Triangle body -->
+          <div style="position:absolute;inset:0;clip-path:polygon(50% 0%,100% 100%,0% 100%);background:linear-gradient(180deg,rgba(52,211,153,0.24) 0%,rgba(251,191,36,0.18) 52%,rgba(96,165,250,0.22) 100%);filter:drop-shadow(0 20px 52px rgba(0,0,0,0.65))"></div>
+
+          <!-- Horizontal tier dividers -->
+          <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:268px;height:1px;background:rgba(255,255,255,0.48)"></div>
+          <div style="position:absolute;bottom:82px;left:50%;transform:translateX(-50%);width:170px;height:1px;background:rgba(255,255,255,0.42)"></div>
+          <div style="position:absolute;bottom:158px;left:50%;transform:translateX(-50%);width:85px;height:1px;background:rgba(255,255,255,0.42)"></div>
+
+          <!-- SOM label (apex) -->
+          <div style="position:absolute;bottom:165px;left:50%;transform:translateX(-50%);text-align:center;z-index:2;white-space:nowrap">
+            <div style="font-size:0.52rem;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.85)">SOM</div>
+            <div style="font-size:1.3rem;font-weight:900;letter-spacing:-0.05em;color:var(--green);line-height:1">$120M</div>
+          </div>
+
+          <!-- SAM label (mid) -->
+          <div style="position:absolute;bottom:88px;left:50%;transform:translateX(-50%);text-align:center;z-index:2;white-space:nowrap">
+            <div style="font-size:0.52rem;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.85)">SAM</div>
+            <div style="font-size:1.3rem;font-weight:900;letter-spacing:-0.05em;color:var(--amber);line-height:1">$6B</div>
+          </div>
+
+          <!-- TAM label (base) -->
+          <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);text-align:center;z-index:2;white-space:nowrap">
+            <div style="font-size:0.52rem;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.85)">TAM</div>
+            <div style="font-size:1.3rem;font-weight:900;letter-spacing:-0.05em;color:var(--blue);line-height:1">$48B</div>
+          </div>
+
+          <!-- Glowing tier dots -->
+          <div style="position:absolute;bottom:218px;left:51%;width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 16px rgba(52,211,153,0.95);z-index:3"></div>
+          <div style="position:absolute;bottom:130px;left:26%;width:10px;height:10px;border-radius:50%;background:var(--amber);box-shadow:0 0 15px rgba(251,191,36,0.9);z-index:3"></div>
+          <div style="position:absolute;bottom:42px;left:68%;width:9px;height:9px;border-radius:50%;background:var(--blue);box-shadow:0 0 15px rgba(96,165,250,0.9);z-index:3"></div>
+
+        </div>
+      </div>
+
+      <div class="vdiv"></div>
+
+      <!-- Revenue streams -->
+      <div style="flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;align-content:start">
+        <!-- Stream 1 -->
+        <div style="border-radius:13px;border:1px solid rgba(52,211,153,0.3);overflow:hidden;background:#0a0a0e;display:flex;flex-direction:column">
+          <div style="background:rgba(52,211,153,0.1);padding:17px 18px 13px;border-bottom:1px solid rgba(52,211,153,0.2)">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+              <div style="width:38px;height:38px;border-radius:10px;background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.35);display:flex;align-items:center;justify-content:center;font-size:1rem">&#127760;</div>
+              <div style="text-align:right">
+                <div style="font-size:1.6rem;font-weight:900;letter-spacing:-0.06em;color:var(--green);line-height:1">$25</div>
+                <div style="font-size:0.58rem;font-weight:600;color:rgba(52,211,153,0.7)">/dev/mo</div>
+              </div>
+            </div>
+            <div style="font-size:0.58rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(52,211,153,0.8);margin-bottom:3px">01 &mdash; Open-core SaaS</div>
+            <div style="font-size:0.88rem;font-weight:700;color:#fff;line-height:1.2">Free to self-host, paid per active dev</div>
+          </div>
+          <div style="padding:14px 18px;flex:1;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);line-height:1.55">Public repos and self-hosting are free. Teams pay per developer for hosted runs, dashboard, forecasting, and the MCP server on private repos.</div>
+            <div style="display:flex;flex-direction:column;gap:5px;margin-top:auto">
+              <div style="font-size:0.67rem;color:rgba(52,211,153,0.82);display:flex;align-items:center;gap:6px"><span style="width:4px;height:4px;border-radius:50%;background:rgba(52,211,153,0.82);flex-shrink:0"></span>Free: public repos + self-host</div>
+              <div style="font-size:0.67rem;color:rgba(52,211,153,0.82);display:flex;align-items:center;gap:6px"><span style="width:4px;height:4px;border-radius:50%;background:rgba(52,211,153,0.82);flex-shrink:0"></span>Billed only on developers who push</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stream 2 -->
+        <div style="border-radius:13px;border:1px solid rgba(96,165,250,0.3);overflow:hidden;background:#0a0a0e;display:flex;flex-direction:column">
+          <div style="background:rgba(96,165,250,0.1);padding:17px 18px 13px;border-bottom:1px solid rgba(96,165,250,0.2)">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+              <div style="width:38px;height:38px;border-radius:10px;background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.35);display:flex;align-items:center;justify-content:center;font-size:1rem">&#127970;</div>
+              <div style="text-align:right">
+                <div style="font-size:1.2rem;font-weight:900;letter-spacing:-0.04em;color:var(--blue);line-height:1">Custom</div>
+                <div style="font-size:0.58rem;font-weight:600;color:rgba(96,165,250,0.7)">annual contract</div>
+              </div>
+            </div>
+            <div style="font-size:0.58rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(96,165,250,0.8);margin-bottom:3px">02 &mdash; Enterprise</div>
+            <div style="font-size:0.88rem;font-weight:700;color:#fff;line-height:1.2">Self-hosted, SSO, audit, SLA</div>
+          </div>
+          <div style="padding:14px 18px;flex:1;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);line-height:1.55">Regulated orgs license a self-hosted deployment with SSO/SAML, audit logging, private model routing, and a support SLA.</div>
+            <div style="display:flex;flex-direction:column;gap:5px;margin-top:auto">
+              <div style="font-size:0.67rem;color:rgba(96,165,250,0.82);display:flex;align-items:center;gap:6px"><span style="width:4px;height:4px;border-radius:50%;background:rgba(96,165,250,0.82);flex-shrink:0"></span>SSO/SAML + audit logs</div>
+              <div style="font-size:0.67rem;color:rgba(96,165,250,0.82);display:flex;align-items:center;gap:6px"><span style="width:4px;height:4px;border-radius:50%;background:rgba(96,165,250,0.82);flex-shrink:0"></span>Data stays in-VPC</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stream 3 -->
+        <div style="border-radius:13px;border:1px solid rgba(251,191,36,0.3);overflow:hidden;background:#0a0a0e;display:flex;flex-direction:column">
+          <div style="background:rgba(251,191,36,0.1);padding:17px 18px 13px;border-bottom:1px solid rgba(251,191,36,0.2)">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+              <div style="width:38px;height:38px;border-radius:10px;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.35);display:flex;align-items:center;justify-content:center;font-size:1rem">&#127919;</div>
+              <div style="text-align:right">
+                <div style="font-size:1.2rem;font-weight:900;letter-spacing:-0.04em;color:var(--amber);line-height:1">per fix</div>
+                <div style="font-size:0.58rem;font-weight:600;color:rgba(251,191,36,0.7)">value-aligned add-on</div>
+              </div>
+            </div>
+            <div style="font-size:0.58rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(251,191,36,0.8);margin-bottom:3px">03 &mdash; Outcome-based</div>
+            <div style="font-size:0.88rem;font-weight:700;color:#fff;line-height:1.2">Pay only for fixes that verify</div>
+          </div>
+          <div style="padding:14px 18px;flex:1;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);line-height:1.55">A fee per verified, merged fix. Customers pay strictly for repairs that worked &mdash; 5/5 CI green. High gross margin, value-aligned pricing.</div>
+            <div style="display:flex;flex-direction:column;gap:5px;margin-top:auto">
+              <div style="font-size:0.67rem;color:rgba(251,191,36,0.82);display:flex;align-items:center;gap:6px"><span style="width:4px;height:4px;border-radius:50%;background:rgba(251,191,36,0.82);flex-shrink:0"></span>Charged on verified, merged fixes only</div>
+              <div style="font-size:0.67rem;color:rgba(251,191,36,0.82);display:flex;align-items:center;gap:6px"><span style="width:4px;height:4px;border-radius:50%;background:rgba(251,191,36,0.82);flex-shrink:0"></span>Scales with proven impact</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Minari &nbsp;·&nbsp; GitLab Rapid Agent Hackathon 2026</span>
+    <span class="slide-num">06 / 07</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 7 — ROADMAP + CTA
+════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="orb" style="width:600px;height:600px;bottom:-160px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(52,211,153,0.055) 0%,transparent 70%)"></div>
+  <div class="grid-bg" style="-webkit-mask-image:radial-gradient(ellipse 60% 60% at 70% 50%, black 20%, transparent 100%);mask-image:radial-gradient(ellipse 60% 60% at 70% 50%, black 20%, transparent 100%)"></div>
+
+  <div class="slide-inner">
+    <div style="margin-bottom:18px">
+      <div class="eyebrow">Roadmap &amp; Next Steps</div>
+      <div class="h2" style="font-size:2.1rem">Live today. Built to become a platform.<br/><span style="color:var(--dim);font-size:1.4rem">The repair loop is closed &mdash; from here, Minari widens and then prevents.</span></div>
+    </div>
+
+    <!-- Timeline nodes -->
+    <div style="position:relative;display:flex;align-items:flex-start;padding:0 110px;margin-bottom:14px">
+      <!-- Gradient connecting line -->
+      <div style="position:absolute;top:19px;left:calc(110px + 52px);right:calc(110px + 52px);height:2px;background:linear-gradient(90deg,var(--green) 0%,var(--blue) 50%,var(--amber) 100%);z-index:0"></div>
+      <!-- Phase 1 node (filled, checkmark) -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px">
+        <div style="width:38px;height:38px;border-radius:50%;background:var(--green);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;position:relative;z-index:1;box-shadow:0 0 20px rgba(52,211,153,0.6);font-size:0.9rem;font-weight:900;color:#050505">&#10003;</div>
+        <div style="text-align:center">
+          <div style="font-size:0.56rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--green)">Phase 1</div>
+          <div style="font-size:0.66rem;font-weight:500;color:rgba(255,255,255,0.65)">Now &middot; Live</div>
+        </div>
+      </div>
+      <!-- Phase 2 node -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px">
+        <div style="width:38px;height:38px;border-radius:50%;background:#0d0d0f;border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;position:relative;z-index:1;box-shadow:0 0 18px rgba(96,165,250,0.45);font-size:0.96rem;font-weight:800;color:var(--blue)">2</div>
+        <div style="text-align:center">
+          <div style="font-size:0.56rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--blue)">Phase 2</div>
+          <div style="font-size:0.66rem;font-weight:500;color:rgba(255,255,255,0.65)">~1 quarter</div>
+        </div>
+      </div>
+      <!-- Phase 3 node -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px">
+        <div style="width:38px;height:38px;border-radius:50%;background:#0d0d0f;border:2px solid var(--amber);display:flex;align-items:center;justify-content:center;position:relative;z-index:1;box-shadow:0 0 18px rgba(251,191,36,0.4);font-size:0.96rem;font-weight:800;color:var(--amber)">3</div>
+        <div style="text-align:center">
+          <div style="font-size:0.56rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--amber)">Phase 3</div>
+          <div style="font-size:0.66rem;font-weight:500;color:rgba(255,255,255,0.65)">~2-3 quarters</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="gap:20px;flex:1;align-items:stretch">
+
+      <!-- Phase 1 (DONE) -->
+      <div style="flex:1;border-radius:13px;border:1px solid rgba(52,211,153,0.38);background:rgba(52,211,153,0.06);padding:20px 22px;display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--green)">Phase 1</div>
+          <span style="font-size:0.62rem;font-weight:700;background:rgba(52,211,153,0.18);color:var(--green);border:1px solid rgba(52,211,153,0.4);border-radius:999px;padding:3px 10px">Now &middot; Live</span>
+        </div>
+        <div style="font-size:0.96rem;font-weight:800;color:var(--white);margin-bottom:13px">Autonomous repair, end to end</div>
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1">
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.77rem;color:rgba(255,255,255,0.85);line-height:1.4">
+            <span style="color:var(--green);font-weight:900;flex-shrink:0;margin-top:1px">&#10003;</span>Five-stage LangGraph pipeline on Cloud Run + Vercel
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.77rem;color:rgba(255,255,255,0.85);line-height:1.4">
+            <span style="color:var(--green);font-weight:900;flex-shrink:0;margin-top:1px">&#10003;</span>Python / pytest with real GitLab CI verification (5x runs)
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.77rem;color:rgba(255,255,255,0.85);line-height:1.4">
+            <span style="color:var(--green);font-weight:900;flex-shrink:0;margin-top:1px">&#10003;</span>Assertion-safety gate + confidence cascade, never auto-merges
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.77rem;color:rgba(255,255,255,0.85);line-height:1.4">
+            <span style="color:var(--green);font-weight:900;flex-shrink:0;margin-top:1px">&#10003;</span>Live dashboard, predictive forecast, sustainability tracker
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.77rem;color:rgba(255,255,255,0.85);line-height:1.4">
+            <span style="color:var(--green);font-weight:900;flex-shrink:0;margin-top:1px">&#10003;</span>Minari exposed as its own MCP server
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div style="flex:1;border-radius:13px;border:1px solid rgba(96,165,250,0.28);background:rgba(96,165,250,0.04);padding:20px 22px;display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--blue)">Phase 2</div>
+          <span style="font-size:0.62rem;font-weight:700;background:rgba(96,165,250,0.1);color:var(--blue);border:1px solid rgba(96,165,250,0.3);border-radius:999px;padding:3px 10px">~1 quarter</span>
+        </div>
+        <div style="font-size:0.96rem;font-weight:800;color:var(--white);margin-bottom:13px">More languages, more platforms</div>
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1">
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.77rem;color:rgba(255,255,255,0.72);line-height:1.4">
+            <span style="color:var(--blue);flex-shrink:0;margin-top:2px">&#9675;</span>JavaScript / TypeScript (Jest, Vitest) and Go support
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.77rem;color:rgba(255,255,255,0.72);line-height:1.4">
+            <span style="color:var(--blue);flex-shrink:0;margin-top:2px">&#9675;</span>GitHub Actions alongside GitLab CI
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.77rem;color:rgba(255,255,255,0.72);line-height:1.4">
+            <span style="color:var(--blue);flex-shrink:0;margin-top:2px">&#9675;</span>Persistent MCP session to shave seconds per run
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.77rem;color:rgba(255,255,255,0.72);line-height:1.4">
+            <span style="color:var(--blue);flex-shrink:0;margin-top:2px">&#9675;</span>Org-wide flakiness analytics across repos
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.77rem;color:rgba(255,255,255,0.72);line-height:1.4">
+            <span style="color:var(--blue);flex-shrink:0;margin-top:2px">&#9675;</span>Slack + merge-request annotations on every fix
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div style="flex:1;border-radius:13px;border:1px solid rgba(251,191,36,0.22);background:rgba(251,191,36,0.03);padding:20px 22px;display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="font-size:0.6rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--amber)">Phase 3</div>
+          <span style="font-size:0.62rem;font-weight:700;background:rgba(251,191,36,0.08);color:var(--amber);border:1px solid rgba(251,191,36,0.25);border-radius:999px;padding:3px 10px">~2-3 quarters</span>
+        </div>
+        <div style="font-size:0.96rem;font-weight:800;color:var(--white);margin-bottom:13px">From repair to prevention</div>
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1">
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.77rem;color:rgba(255,255,255,0.72);line-height:1.4">
+            <span style="color:var(--amber);flex-shrink:0;margin-top:2px">&#9675;</span>Forecast-driven pre-merge flakiness gating
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.77rem;color:rgba(255,255,255,0.72);line-height:1.4">
+            <span style="color:var(--amber);flex-shrink:0;margin-top:2px">&#9675;</span>Auto-quarantine with batched, scheduled fix MRs
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.77rem;color:rgba(255,255,255,0.72);line-height:1.4">
+            <span style="color:var(--amber);flex-shrink:0;margin-top:2px">&#9675;</span>Self-hosted enterprise: SSO, audit, private routing
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.77rem;color:rgba(255,255,255,0.72);line-height:1.4">
+            <span style="color:var(--amber);flex-shrink:0;margin-top:2px">&#9675;</span>Fine-tuned diagnosis on accumulated repair history
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px;font-size:0.77rem;color:rgba(255,255,255,0.72);line-height:1.4">
+            <span style="color:var(--amber);flex-shrink:0;margin-top:2px">&#9675;</span>Shared library of verified fix strategies
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA panel -->
+      <div style="flex:0 0 220px;border-radius:13px;border:1px solid var(--border);background:rgba(255,255,255,0.025);padding:20px 20px;display:flex;flex-direction:column;justify-content:space-between">
+        <div>
+          <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Try it now</div>
+          <div style="font-size:1rem;font-weight:800;color:var(--white);line-height:1.25;margin-bottom:10px">Stop re-running. Start trusting the suite.</div>
+          <div style="font-size:0.76rem;color:rgba(255,255,255,0.6);line-height:1.55">Watch Minari diagnose a flaky test, prove the fix in real CI, and open a reviewed merge request in under two minutes.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px">
+          <a href="https://minari-eight.vercel.app" style="display:flex;align-items:center;justify-content:center;background:#fff;color:#000;border-radius:9px;padding:10px 16px;font-size:0.8rem;font-weight:700;text-decoration:none;transition:opacity 0.15s" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+            Open live app &#8594;
+          </a>
+          <a href="https://gitlab.com/francisdanielgenese-group/francisdanielgenese-project" style="display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.18);border-radius:9px;padding:10px 16px;font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.82);text-decoration:none" onmouseover="this.style.borderColor='rgba(255,255,255,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.18)'">
+            Demo GitLab repo
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>Minari &nbsp;·&nbsp; GitLab Rapid Agent Hackathon 2026 &nbsp;·&nbsp; minari-eight.vercel.app</span>
+    <span class="slide-num">07 / 07</span>
+  </div>
+</div>
+
+
+</body>
+</html>
