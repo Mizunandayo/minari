@@ -9,7 +9,7 @@ const KPIS = [
     n: "16%",
     u: "of tests",
     t: "Flakiness is universal at scale",
-    d: "Google measured ~16% of its own tests as flaky. The best-resourced suite on earth still has them — so does yours.",
+    d: "Google measured ~16% of its own tests as flaky. The best-resourced suite on earth still has them, and so does yours.",
   },
   {
     Icon: Clock,
@@ -25,7 +25,7 @@ const KPIS = [
     n: "0",
     u: "trust left",
     t: "The suite stops meaning anything",
-    d: "After enough false alarms, teams reflexively ignore red — including the one failure that was a genuine break.",
+    d: "After enough false alarms, teams reflexively ignore red, including the one failure that was a genuine break.",
   },
 ];
 
@@ -39,24 +39,22 @@ export function Problem() {
 
         <Reveal delay={1}>
           <h2
-            className="mx-auto text-center font-bold leading-[1.12] tracking-[-0.02em] text-white"
-            style={{ fontSize: "clamp(1.6rem,3.4vw,2.5rem)", maxWidth: "44rem" }}
+            className="mx-auto max-w-[42rem] text-center font-bold leading-[1.1] tracking-[-0.025em] text-white"
+            style={{ fontSize: "clamp(1.9rem,4vw,3rem)" }}
           >
-            Flaky tests don&apos;t fail because the code is wrong.{" "}
-            <span className="text-white/[0.6]">
-              They fail because timing, order, and shared state are unreliable — and that
-              unreliability quietly erodes trust in the whole suite.
-            </span>
+            Flaky tests don&apos;t fail because the code is wrong.
           </h2>
         </Reveal>
 
         <Reveal delay={2}>
           <p
-            className="mx-auto mt-6 text-center text-[1.02rem] leading-relaxed text-white/[0.92]"
-            style={{ maxWidth: "36rem" }}
+            className="mx-auto mt-6 max-w-[40rem] text-center text-white/[0.92]"
+            style={{ fontSize: "clamp(1.05rem,1.5vw,1.2rem)", lineHeight: 1.7 }}
           >
-            Every team has them. Most tools can only point at them — fixing them by hand is slow,
-            and the lazy fix, weakening the test, is worse than the flake itself.
+            They fail because timing, ordering, and shared state are unreliable, and that
+            unreliability quietly erodes trust in the whole suite. Most tools can only point at
+            them; fixing by hand is slow, and the lazy fix, weakening the test, is worse than the
+            flake itself.
           </p>
         </Reveal>
 

@@ -13,8 +13,8 @@ const STREAMS = [
     stat: "$25",
     statSub: "/ active dev / mo",
     bullets: [
-      "Free — public repos & self-host",
-      "Team — private repos, dashboard, forecast",
+      "Free: public repos & self-host",
+      "Team: private repos, dashboard, forecast",
       "Billed only on developers who actually push",
     ],
   },
@@ -44,7 +44,7 @@ const STREAMS = [
     statSub: "value-aligned add-on",
     bullets: [
       "Charged on verified, merged fixes only",
-      "Inference cost is cents — high gross margin",
+      "Inference cost is cents, high gross margin",
       "Price scales with proven impact",
     ],
   },
@@ -112,7 +112,7 @@ export function Revenue() {
                     </div>
                   </div>
                   <div className="mb-2 text-[0.7rem] font-bold uppercase tracking-[0.14em]" style={{ color: s.color }}>
-                    {s.n} — {s.tag}
+                    {s.n} · {s.tag}
                   </div>
                   <div className="text-[1.05rem] font-bold leading-snug text-white">{s.title}</div>
                 </div>

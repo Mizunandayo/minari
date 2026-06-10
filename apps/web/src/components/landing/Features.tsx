@@ -174,14 +174,14 @@ export function Features() {
                 Assertion-safety gate
               </span>
               <div className="mb-2 text-[1rem] font-bold text-white">
-                Minari fixes the cause — it never weakens the test to force a pass.
+                Minari fixes the cause. It never weakens the test to force a pass.
               </div>
               <p className="text-[0.92rem] leading-relaxed text-white/[0.92]">
                 An AST walk proves every original assertion still exists in the fix. The rule is
                 even enforced in the database, so a fix that edits an assertion can&apos;t be stored.
               </p>
               <div className="mt-5 rounded-xl border border-white/[0.14] p-4 font-mono text-[0.82rem] leading-7" style={{ background: "#050505" }}>
-                <span className="text-white/[0.78]">{"// fix adds synchronization — assertions untouched"}</span>
+                <span className="text-white/[0.78]">{"// fix adds synchronization, assertions untouched"}</span>
                 <br />
                 <span style={{ color: "var(--color-pass)" }}>+ await until(ready, timeout=2s)</span>
                 <br />
@@ -240,7 +240,7 @@ export function Features() {
               </span>
               <div className="mb-2 text-[0.96rem] font-bold text-white">It proposes. You decide.</div>
               <p className="text-[0.9rem] leading-relaxed text-white/[0.92]">
-                Minari opens a merge request with a senior-engineer write-up and a reviewer — and
+                Minari opens a merge request with a senior-engineer write-up and a reviewer, and
                 never merges on its own. The final call always belongs to a person.
               </p>
             </div>

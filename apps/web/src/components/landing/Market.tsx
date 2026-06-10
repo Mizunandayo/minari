@@ -14,7 +14,7 @@ const SEGMENTS = [
     value: "$6B",
     color: "var(--color-warn)",
     title: "CI-integrated test reliability",
-    body: "Teams on Git-based CI who feel flakiness directly — the slice Minari plugs into natively.",
+    body: "Teams on Git-based CI who feel flakiness directly, the slice Minari plugs into natively.",
   },
   {
     key: "SOM",
@@ -32,7 +32,7 @@ const ICP = [
   },
   {
     title: "Developer-experience teams",
-    copy: "DevEx and platform groups chartered to protect velocity — flakiness is squarely their mandate.",
+    copy: "DevEx and platform groups chartered to protect velocity. Flakiness is squarely their mandate.",
   },
   {
     title: "Open-source maintainers",
@@ -63,7 +63,7 @@ export function Market() {
         </Reveal>
 
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
-          {/* Pyramid — SOM apex, TAM base (Mirai-style triangle) */}
+          {/* Pyramid: SOM apex, TAM base (Mirai-style triangle) */}
           <Reveal delay={2}>
             <div className="relative mx-auto flex min-h-[30rem] w-full max-w-[30rem] items-center justify-center">
               {/* Triangle body */}
@@ -100,7 +100,7 @@ export function Market() {
                 <div className="text-[1.55rem] font-bold tracking-[-0.04em] text-white">$48B</div>
               </div>
 
-              {/* Floating tier dots — Mirai colors */}
+              {/* Floating tier dots (Mirai colors) */}
               <span
                 className="absolute"
                 style={{ top: "4.5rem", left: "48%", width: 10, height: 10, borderRadius: "9999px", background: "#67e8f9", boxShadow: "0 0 16px rgba(103,232,249,0.9)" }}

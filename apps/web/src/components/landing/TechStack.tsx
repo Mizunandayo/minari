@@ -109,7 +109,7 @@ export function TechStack() {
         </Reveal>
         <Reveal delay={2}>
           <p className="mb-12 max-w-2xl text-[1.03rem] leading-relaxed text-white/[0.92]">
-            The full stack behind Minari — agent, backend, data, integration, frontend, and the
+            The full stack behind Minari: agent, backend, data, integration, frontend, and the
             security boundaries that make autonomous test repair safe to run.
           </p>
         </Reveal>

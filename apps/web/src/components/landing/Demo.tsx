@@ -35,7 +35,7 @@ export function Demo() {
                   <Play size={30} strokeWidth={2} className="ml-1 text-white" aria-hidden />
                 </span>
                 <span className="text-[0.95rem] font-semibold text-white/[0.78]">
-                  Three-minute demo — drop the recording here
+                  Three-minute demo · drop the recording here
                 </span>
               </div>
             </div>

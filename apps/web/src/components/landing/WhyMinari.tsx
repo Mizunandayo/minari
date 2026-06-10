@@ -41,7 +41,7 @@ export function WhyMinari() {
           </div>
         </Reveal>
 
-        {/* Full capability matrix — reuses the dashboard component so the two never drift */}
+        {/* Full capability matrix; reuses the dashboard component so the two never drift */}
         <Reveal delay={2}>
           <CompetitorMatrix />
         </Reveal>

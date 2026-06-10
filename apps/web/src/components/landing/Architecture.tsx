@@ -19,7 +19,7 @@ const PILLARS = [
   },
   {
     Icon: Plug,
-    title: "GitLab over MCP — both ways",
+    title: "GitLab over MCP, both ways",
     desc: "Minari consumes the GitLab MCP server to read code and drive CI, and exposes itself as an MCP server so other agents can call detect, diagnose, fix and verify.",
   },
   {
@@ -49,7 +49,7 @@ function Connector({ label }: { label: string }) {
 function SystemDiagram() {
   return (
     <div className="glass-panel rounded-2xl p-6 sm:p-8">
-      {/* Tier 1 — interface */}
+      {/* Tier 1: interface */}
       <div className="mx-auto flex max-w-md items-center gap-3 rounded-xl border border-white/[0.14] bg-white/[0.03] px-5 py-3.5">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/icons/nextjs.svg" alt="" aria-hidden width={22} height={22} />
@@ -61,7 +61,7 @@ function SystemDiagram() {
 
       <Connector label="SSE / HTTPS · API-key + HMAC" />
 
-      {/* Tier 2 — agent core */}
+      {/* Tier 2: agent core */}
       <div className="rounded-xl border border-white/[0.16] bg-white/[0.05] p-4">
         <div className="mb-3 flex items-center justify-center gap-2 text-[0.66rem] font-bold uppercase tracking-[0.14em] text-white/[0.78]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -82,7 +82,7 @@ function SystemDiagram() {
 
       <Connector label="GitLab MCP · SQL · model calls" />
 
-      {/* Tier 3 — services */}
+      {/* Tier 3: services */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {SERVICES.map((svc) => (
           <div

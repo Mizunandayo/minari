@@ -6,7 +6,7 @@ const PHASES = [
   {
     num: "1",
     phase: "Phase 1",
-    when: "Now — Live",
+    when: "Now · Live",
     color: "var(--color-pass)",
     done: true,
     title: "Autonomous repair, end to end",
@@ -67,7 +67,7 @@ const IMPACT = [
     label: "Impact",
     color: "var(--color-warn)",
     title: "Detection was the start, not the goal",
-    body: "Competitors flag flakiness; Minari removes it and is moving toward preventing it — closing the loop the rest of the category leaves open.",
+    body: "Competitors flag flakiness; Minari removes it and is moving toward preventing it, closing the loop the rest of the category leaves open.",
   },
 ];
 

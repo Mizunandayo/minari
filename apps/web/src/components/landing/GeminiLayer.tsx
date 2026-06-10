@@ -39,10 +39,10 @@ const MODELS = [
 ];
 
 const USES = [
-  { Icon: Braces, title: "Structured output", desc: "Every model call returns a typed Pydantic schema — never free text the pipeline has to guess at." },
+  { Icon: Braces, title: "Structured output", desc: "Every model call returns a typed Pydantic schema, never free text the pipeline has to guess at." },
   { Icon: RefreshCw, title: "Self-repair loop", desc: "If the model returns a malformed schema, Minari re-prompts with the validation error until it parses." },
   { Icon: ShieldAlert, title: "Untrusted-data fencing", desc: "Test source and logs are fenced as untrusted input, so a crafted test can't hijack the prompt." },
-  { Icon: Sparkles, title: "Adaptive routing", desc: "Pro for the genuinely uncertain diagnoses, Flash for everything else — accuracy where it matters, speed elsewhere." },
+  { Icon: Sparkles, title: "Adaptive routing", desc: "Pro for the genuinely uncertain diagnoses, Flash for everything else: accuracy where it matters, speed elsewhere." },
 ];
 
 export function GeminiLayer() {
@@ -76,8 +76,8 @@ export function GeminiLayer() {
           </Reveal>
           <Reveal delay={2}>
             <p className="mx-auto max-w-xl text-center text-[1.03rem] leading-relaxed text-white/[0.92]">
-              Diagnosis, repair, and recall all flow through Gemini 2.5. Deterministic gates —
-              syntax, assertions, real CI — own the safety. The model reasons; the pipeline verifies.
+              Diagnosis, repair, and recall all flow through Gemini 2.5. Deterministic gates
+              (syntax, assertions, real CI) own the safety. The model reasons; the pipeline verifies.
             </p>
           </Reveal>
         </div>

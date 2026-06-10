@@ -38,7 +38,7 @@ export function CTA() {
               </h2>
               <p className="mx-auto mb-10 max-w-md text-[1rem] leading-relaxed text-white/[0.92]">
                 Watch Minari diagnose a flaky test, prove the fix in real CI, and open a reviewed
-                merge request — end to end, in under two minutes.
+                merge request, end to end, in under two minutes.
               </p>
               <div className="flex flex-wrap justify-center gap-3">
                 <Link

@@ -4,23 +4,20 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowRight, GitBranch } from "lucide-react";
 
-const STATS = [
-  { num: "5", lbl: "Autonomous stages" },
-  { num: "<2 min", lbl: "Detect to delivery" },
-  { num: "5×", lbl: "CI re-verification" },
-  { num: "0", lbl: "Auto-merges" },
+const PROOF = [
+  { num: "5", lbl: "autonomous stages" },
+  { num: "<2 min", lbl: "detect to delivery" },
+  { num: "5×", lbl: "CI-verified" },
+  { num: "0", lbl: "auto-merges" },
 ];
 
 const META = [
-  { label: "Developer", value: "Francis Daniel — Mizu" },
-  { label: "Timeline", value: "May 06 – Jul 14, 2026" },
+  { label: "Developer", value: "Francis Daniel · Mizu" },
+  { label: "Track", value: "GitLab · MCP" },
+  { label: "Deadline", value: "Jun 12, 2026 · GMT+8" },
 ];
 
-const SCHEDULE = [
-  { phase: "Submissions", when: "May 6 – Jun 12" },
-  { phase: "Judging", when: "Jun 23 – Jul 7" },
-  { phase: "Winners", when: "Jul 14" },
-];
+const BUILT_WITH = "Gemini 2.5 · LangGraph · GitLab MCP · Google Cloud Run";
 
 /* Subtle randomized star-field behind the headline. */
 function StarField() {
@@ -30,7 +27,6 @@ function StarField() {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       for (let i = 0; i < 220; i++) {
@@ -54,56 +50,44 @@ function StarField() {
     ro.observe(canvas);
     return () => ro.disconnect();
   }, []);
-
-  return (
-    <canvas
-      ref={ref}
-      aria-hidden
-      className="pointer-events-none absolute inset-0 z-0 h-full w-full"
-    />
-  );
+  return <canvas ref={ref} aria-hidden className="pointer-events-none absolute inset-0 z-0 h-full w-full" />;
 }
 
 export function Hero() {
   return (
     <section id="hero" className="relative min-h-[100dvh] overflow-hidden bg-[#050505]">
       <StarField />
-      {/* Perspective grid */}
+      {/* Perspective grid, weighted toward the headline */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           backgroundImage:
             "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)",
-          backgroundSize: "80px 80px",
-          maskImage: "radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%)",
+          backgroundSize: "78px 78px",
+          maskImage: "radial-gradient(ellipse 75% 65% at 30% 42%, black 25%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(ellipse 75% 65% at 30% 42%, black 25%, transparent 100%)",
         }}
       />
-      {/* Spotlight */}
+      {/* Spotlight, pulled left to balance the left-aligned headline */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 z-[1]"
-        style={{
-          background:
-            "radial-gradient(ellipse 65% 55% at 50% 42%, rgba(255,255,255,0.055) 0%, transparent 70%)",
-        }}
+        style={{ background: "radial-gradient(ellipse 55% 55% at 28% 40%, rgba(255,255,255,0.06) 0%, transparent 70%)" }}
       />
 
-      <div className="relative z-[2] flex min-h-[100dvh] flex-col items-center justify-center px-6 pb-20 pt-28 text-center">
-        {/* Eyebrow — plain tracked text, no badge */}
+      {/* Editorial left-aligned column */}
+      <div className="relative z-[2] mx-auto flex min-h-[100dvh] max-w-5xl flex-col justify-center px-6 pb-16 pt-28">
         <p
-          className="hero-enter mb-7 text-[0.8rem] font-semibold uppercase tracking-[0.22em] text-white/[0.78]"
+          className="hero-enter mb-7 text-[0.78rem] font-semibold uppercase tracking-[0.2em] text-white/[0.78]"
           style={{ animationDelay: "0.05s" }}
         >
-          Security &amp; Compliance + AI/ML API Track
+          Google Cloud Rapid Agent Hackathon · GitLab Track
         </p>
 
-        {/* Wordmark */}
         <h1
-          className="hero-enter flex flex-wrap items-baseline justify-center gap-x-5 font-bold leading-[0.9] tracking-[-0.035em] text-white"
-          style={{ animationDelay: "0.16s", fontSize: "clamp(3.5rem,11vw,8rem)" }}
+          className="hero-enter flex flex-wrap items-baseline gap-x-5 font-bold leading-[0.88] tracking-[-0.04em] text-white"
+          style={{ animationDelay: "0.14s", fontSize: "clamp(3.5rem,9vw,7rem)" }}
         >
           <span>Minari</span>
           <span className="font-semibold text-white/[0.5]" style={{ letterSpacing: "-0.02em" }}>
@@ -111,28 +95,24 @@ export function Hero() {
           </span>
         </h1>
 
-        {/* Value line */}
         <p
-          className="hero-enter mt-6 text-white"
-          style={{ animationDelay: "0.26s", fontSize: "clamp(1.15rem,2.4vw,1.6rem)", fontWeight: 600, letterSpacing: "-0.01em" }}
+          className="hero-enter mt-6 max-w-[40rem] text-white"
+          style={{ animationDelay: "0.24s", fontSize: "clamp(1.3rem,2.6vw,2rem)", fontWeight: 600, letterSpacing: "-0.015em", lineHeight: 1.2 }}
         >
-          Autonomous flaky-test intelligence.
+          Autonomous flaky-test intelligence. The agent that doesn&apos;t just flag a flaky test,
+          it fixes one.
         </p>
 
-        {/* Supporting sentence */}
         <p
-          className="hero-enter mt-4 max-w-[38rem] text-white/[0.92]"
-          style={{ animationDelay: "0.34s", fontSize: "clamp(1rem,1.55vw,1.15rem)", lineHeight: 1.7 }}
+          className="hero-enter mt-5 max-w-[37rem] text-white/[0.92]"
+          style={{ animationDelay: "0.32s", fontSize: "clamp(1rem,1.4vw,1.12rem)", lineHeight: 1.7 }}
         >
-          Detect → diagnose → fix → verify → deliver. Minari repairs a flaky test end to end and
-          opens a reviewed merge request — never weakening an assertion, never merging on its own.
+          Detect → diagnose → fix → verify → deliver. Minari proves every fix in real GitLab CI and
+          opens a reviewed merge request. It never weakens an assertion, and never merges on its own.
         </p>
 
         {/* CTAs */}
-        <div
-          className="hero-enter mt-10 flex flex-wrap items-center justify-center gap-3"
-          style={{ animationDelay: "0.44s" }}
-        >
+        <div className="hero-enter mt-9 flex flex-wrap items-center gap-3" style={{ animationDelay: "0.42s" }}>
           <Link
             href="/dashboard"
             aria-label="Watch a live diagnosis on the dashboard"
@@ -153,83 +133,40 @@ export function Hero() {
           </a>
         </div>
 
-        {/* Borderless live status (not a pill) */}
+        {/* Inline proof ribbon: plain text, no box */}
         <div
-          className="hero-enter mt-7 flex items-center gap-2.5 text-[0.85rem] font-medium text-white/[0.78]"
-          style={{ animationDelay: "0.52s" }}
+          className="hero-enter mt-9 flex flex-wrap items-center gap-x-3.5 gap-y-2 text-[0.92rem] text-white/[0.92]"
+          style={{ animationDelay: "0.5s" }}
         >
-          <span
-            className="badge-dot h-2 w-2 shrink-0 rounded-full"
-            style={{ background: "var(--color-pass)" }}
-            aria-hidden
-          />
-          Live on Cloud Run + Vercel · GitLab-native
-        </div>
-
-        {/* Stat bar — real proof */}
-        <div
-          className="hero-enter mt-11 grid w-full max-w-[600px] grid-cols-2 overflow-hidden rounded-2xl border border-white/[0.14] bg-white/[0.04] backdrop-blur sm:grid-cols-4"
-          style={{ animationDelay: "0.6s" }}
-        >
-          {STATS.map((s, i) => (
-            <div
-              key={s.lbl}
-              className={`flex flex-col items-center px-5 py-[18px] ${
-                i !== 0 ? "border-white/[0.08] sm:border-l" : ""
-              }`}
-            >
-              <span
-                className="text-white"
-                style={{ fontSize: "clamp(1.3rem,2.4vw,1.6rem)", fontWeight: 700, letterSpacing: "-0.04em" }}
-              >
-                {s.num}
-              </span>
-              <span className="mt-1 text-center text-[0.8rem] font-medium text-white/[0.78]">
-                {s.lbl}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* Developer + timeline */}
-        <div
-          className="hero-enter mt-10 flex flex-wrap items-start justify-center gap-x-12 gap-y-5"
-          style={{ animationDelay: "0.68s" }}
-        >
-          {META.map((m) => (
-            <div key={m.label} className="flex flex-col items-center gap-1">
-              <span className="text-[0.72rem] font-bold uppercase tracking-[0.16em] text-white/[0.78]">
-                {m.label}
-              </span>
-              <span className="text-[0.95rem] font-semibold text-white">{m.value}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Schedule timeline (GMT+8) */}
-        <div
-          className="hero-enter mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[0.8rem] font-medium text-white/[0.78]"
-          style={{ animationDelay: "0.74s" }}
-        >
-          {SCHEDULE.map((s, i) => (
-            <span key={s.phase} className="flex items-center gap-4">
+          {PROOF.map((p, i) => (
+            <span key={p.lbl} className="flex items-center gap-3.5">
               <span>
-                {s.phase} <span className="text-white">{s.when}</span>
+                <span className="font-bold tracking-[-0.02em] text-white">{p.num}</span> {p.lbl}
               </span>
-              {i < SCHEDULE.length - 1 && <span className="text-white/[0.4]" aria-hidden>·</span>}
+              {i < PROOF.length - 1 && <span className="text-white/[0.35]" aria-hidden>·</span>}
             </span>
           ))}
-          <span className="text-white/[0.4]" aria-hidden>·</span>
-          <span>GMT+8</span>
         </div>
-      </div>
 
-      {/* Scroll cue */}
-      <div className="relative z-[2] flex flex-col items-center gap-1.5 pb-6 opacity-30">
-        <span className="h-8 w-px bg-white/50" />
-        <span className="text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-white/[0.78]">
-          Scroll
-        </span>
+        {/* Footer: identity + stack */}
+        <div
+          className="hero-enter mt-12 flex flex-wrap items-end justify-between gap-x-8 gap-y-6 border-t border-white/[0.1] pt-7"
+          style={{ animationDelay: "0.58s" }}
+        >
+          <div className="flex flex-wrap gap-x-9 gap-y-4">
+            {META.map((m) => (
+              <div key={m.label} className="flex flex-col gap-1">
+                <span className="text-[0.66rem] font-bold uppercase tracking-[0.14em] text-white/[0.78]">
+                  {m.label}
+                </span>
+                <span className="text-[0.9rem] font-semibold text-white">{m.value}</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-[0.8rem] font-medium text-white/[0.78]">
+            Built with <span className="text-white">{BUILT_WITH}</span>
+          </p>
+        </div>
       </div>
     </section>
   );
