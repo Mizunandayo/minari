@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Play, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/hooks/useScrollReveal";
 import { MicroLabel, DisplayHeading } from "./Primitives";
 
@@ -21,24 +21,16 @@ export function Demo() {
         </div>
 
         <Reveal delay={2}>
-          <div className="group relative overflow-hidden rounded-3xl border border-white/[0.14] bg-white/[0.03]">
-            <div
-              className="flex w-full items-center justify-center"
-              style={{
-                aspectRatio: "16 / 9",
-                background:
-                  "radial-gradient(ellipse 55% 60% at 50% 45%, rgba(255,255,255,0.05) 0%, transparent 70%), repeating-linear-gradient(135deg, rgba(255,255,255,0.02) 0 16px, transparent 16px 32px)",
-              }}
-            >
-              <div className="flex flex-col items-center gap-4">
-                <span className="flex h-20 w-20 items-center justify-center rounded-full border border-white/[0.18] bg-white/[0.06] transition-transform duration-300 group-hover:scale-105">
-                  <Play size={30} strokeWidth={2} className="ml-1 text-white" aria-hidden />
-                </span>
-                <span className="text-[0.95rem] font-semibold text-white/[0.78]">
-                  Three-minute demo · drop the recording here
-                </span>
-              </div>
-            </div>
+          <div className="relative overflow-hidden rounded-3xl border border-white/[0.14] bg-black">
+            <iframe
+              className="block w-full"
+              style={{ aspectRatio: "16 / 9" }}
+              src="https://www.youtube.com/embed/ndJ8cZIg4cM"
+              title="Minari — three-minute demo"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            />
           </div>
         </Reveal>
 
