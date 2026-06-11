@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { Play, ArrowRight } from "lucide-react";
 import { Reveal } from "@/hooks/useScrollReveal";
 import { MicroLabel, DisplayHeading } from "./Primitives";
 
@@ -21,17 +21,26 @@ export function Demo() {
         </div>
 
         <Reveal delay={2}>
-          <div className="relative overflow-hidden rounded-3xl border border-white/[0.14] bg-black">
-            <iframe
-              className="block w-full"
-              style={{ aspectRatio: "16 / 9" }}
-              src="https://www.youtube.com/embed/ndJ8cZIg4cM"
-              title="Minari — three-minute demo"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            />
-          </div>
+          <a
+            href="https://www.youtube.com/watch?v=ndJ8cZIg4cM"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Watch the Minari three-minute demo on YouTube"
+            className="group relative block cursor-pointer overflow-hidden rounded-3xl border border-white/[0.14] bg-black"
+          >
+            <div
+              className="flex w-full items-center justify-center bg-cover bg-center"
+              style={{
+                aspectRatio: "16 / 9",
+                backgroundImage:
+                  "linear-gradient(rgba(0,0,0,0.20), rgba(0,0,0,0.45)), url('https://img.youtube.com/vi/ndJ8cZIg4cM/maxresdefault.jpg')",
+              }}
+            >
+              <span className="flex h-20 w-20 items-center justify-center rounded-full border border-white/[0.18] bg-black/[0.45] backdrop-blur transition-transform duration-300 group-hover:scale-105">
+                <Play size={30} strokeWidth={2} className="ml-1 text-white" aria-hidden />
+              </span>
+            </div>
+          </a>
         </Reveal>
 
         <Reveal delay={3}>
