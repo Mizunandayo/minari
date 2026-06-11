@@ -7,15 +7,15 @@ import { ArrowUpRight } from "lucide-react";
 const LINKS = [
   { id: "problem", label: "Problem" },
   { id: "workflow", label: "Pipeline" },
-  { id: "gemini", label: "Gemini" },
+  { id: "demo", label: "Demo" },
   { id: "architecture", label: "Architecture" },
+  { id: "gemini", label: "Gemini" },
   { id: "features", label: "Features" },
   { id: "techstack", label: "Stack" },
+  { id: "why-minari", label: "Why Minari" },
   { id: "market", label: "Market" },
   { id: "revenue", label: "Revenue" },
-  { id: "why-minari", label: "Why Minari" },
   { id: "roadmap", label: "Roadmap" },
-  { id: "demo", label: "Demo" },
 ];
 
 export function LandingNav() {

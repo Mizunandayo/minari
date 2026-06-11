@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowRight, GitBranch } from "lucide-react";
+import { HeroFeed } from "@/components/landing/HeroFeed";
 
 const PROOF = [
   { num: "5", lbl: "autonomous stages" },
@@ -65,19 +66,19 @@ export function Hero() {
           backgroundImage:
             "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)",
           backgroundSize: "78px 78px",
-          maskImage: "radial-gradient(ellipse 75% 65% at 30% 42%, black 25%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(ellipse 75% 65% at 30% 42%, black 25%, transparent 100%)",
+          maskImage: "radial-gradient(ellipse 75% 65% at 50% 42%, black 25%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(ellipse 75% 65% at 50% 42%, black 25%, transparent 100%)",
         }}
       />
       {/* Spotlight, pulled left to balance the left-aligned headline */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 z-[1]"
-        style={{ background: "radial-gradient(ellipse 55% 55% at 28% 40%, rgba(255,255,255,0.06) 0%, transparent 70%)" }}
+        style={{ background: "radial-gradient(ellipse 55% 55% at 50% 40%, rgba(255,255,255,0.06) 0%, transparent 70%)" }}
       />
 
-      {/* Editorial left-aligned column */}
-      <div className="relative z-[2] mx-auto flex min-h-[100dvh] max-w-5xl flex-col justify-center px-6 pb-16 pt-28">
+      {/* Editorial centered column */}
+      <div className="relative z-[2] mx-auto flex min-h-[100dvh] max-w-5xl flex-col items-center justify-center px-6 pb-16 pt-28 text-center">
         <p
           className="hero-enter mb-7 text-[0.78rem] font-semibold uppercase tracking-[0.2em] text-white/[0.78]"
           style={{ animationDelay: "0.05s" }}
@@ -86,7 +87,7 @@ export function Hero() {
         </p>
 
         <h1
-          className="hero-enter flex flex-wrap items-baseline gap-x-5 font-bold leading-[0.88] tracking-[-0.04em] text-white"
+          className="hero-enter flex flex-wrap items-baseline justify-center gap-x-5 font-bold leading-[0.88] tracking-[-0.04em] text-white"
           style={{ animationDelay: "0.14s", fontSize: "clamp(3.5rem,9vw,7rem)" }}
         >
           <span>Minari</span>
@@ -112,7 +113,7 @@ export function Hero() {
         </p>
 
         {/* CTAs */}
-        <div className="hero-enter mt-9 flex flex-wrap items-center gap-3" style={{ animationDelay: "0.42s" }}>
+        <div className="hero-enter mt-9 flex flex-wrap items-center justify-center gap-3" style={{ animationDelay: "0.42s" }}>
           <Link
             href="/dashboard"
             aria-label="Watch a live diagnosis on the dashboard"
@@ -135,7 +136,7 @@ export function Hero() {
 
         {/* Inline proof ribbon: plain text, no box */}
         <div
-          className="hero-enter mt-9 flex flex-wrap items-center gap-x-3.5 gap-y-2 text-[0.92rem] text-white/[0.92]"
+          className="hero-enter mt-9 flex flex-wrap items-center justify-center gap-x-3.5 gap-y-2 text-[0.92rem] text-white/[0.92]"
           style={{ animationDelay: "0.5s" }}
         >
           {PROOF.map((p, i) => (
@@ -148,12 +149,17 @@ export function Hero() {
           ))}
         </div>
 
+        {/* Live agent feed — flaky tests ranked by risk, with the real toolchain */}
+        <div className="hero-enter mt-12 w-full max-w-[52rem]" style={{ animationDelay: "0.56s" }}>
+          <HeroFeed />
+        </div>
+
         {/* Footer: identity + stack */}
         <div
-          className="hero-enter mt-12 flex flex-wrap items-end justify-between gap-x-8 gap-y-6 border-t border-white/[0.1] pt-7"
+          className="hero-enter mt-12 flex w-full max-w-[44rem] flex-col items-center gap-y-6 border-t border-white/[0.1] pt-7"
           style={{ animationDelay: "0.58s" }}
         >
-          <div className="flex flex-wrap gap-x-9 gap-y-4">
+          <div className="flex flex-wrap justify-center gap-x-9 gap-y-4">
             {META.map((m) => (
               <div key={m.label} className="flex flex-col gap-1">
                 <span className="text-[0.66rem] font-bold uppercase tracking-[0.14em] text-white/[0.78]">
