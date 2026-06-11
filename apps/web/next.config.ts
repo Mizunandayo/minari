@@ -27,6 +27,7 @@ const securityHeaders = [
       "img-src 'self' data:",
       "font-src 'self'", // Poppins is self-hosted -> no google domain needed
       connectSrc,
+      "frame-src https://www.youtube.com https://www.youtube-nocookie.com", // demo video embed
       "frame-ancestors 'none'",
     ].join("; "),
   },
